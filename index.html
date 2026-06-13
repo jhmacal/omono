@@ -16,27 +16,28 @@
   :root {
     /* Liquid Glass — self-luminous panels that read even when backdrop-filter does nothing */
     --bg: #0a0a0c;
-    --glass-hi: rgba(255, 255, 255, 0.55);   /* specular top edge */
-    --glass-edge: rgba(255, 255, 255, 0.30); /* hairline rim light */
-    --border: rgba(255, 255, 255, 0.28);
-    --border-soft: rgba(255, 255, 255, 0.16);
+    --glass-hi: rgba(255, 255, 255, 0.9);    /* bright specular top edge */
+    --glass-edge: rgba(255, 255, 255, 0.18); /* hairline rim light */
+    --border: rgba(255, 255, 255, 0.4);
+    --border-soft: rgba(255, 255, 255, 0.22);
     --text: #ffffff;
-    --text-dim: #d4d4de;
-    --text-faint: #9a9aa6;
+    --text-dim: #e8e8ee;
+    --text-faint: #c2c2cc;
     --gold: #e8b455;
     --gold-hi: #ffe0a0;
     --gold-soft: rgba(232, 180, 85, 0.22);
-    --gold-border: rgba(232, 180, 85, 0.7);
+    --gold-border: rgba(232, 180, 85, 0.8);
     --red: #e5484d;
     --green: #46a758;
-    --radius: 20px;
-    --radius-sm: 13px;
-    --blur: saturate(200%) blur(30px);
-    /* the glass material: bright translucent fill carrying its own light gradient */
-    --glass: linear-gradient(155deg, rgba(255,255,255,0.22), rgba(255,255,255,0.06) 45%, rgba(255,255,255,0.11));
-    --glass-soft: linear-gradient(155deg, rgba(255,255,255,0.14), rgba(255,255,255,0.03) 50%, rgba(255,255,255,0.07));
-    --glass-shadow: 0 10px 34px rgba(0,0,0,0.42), 0 2px 10px rgba(0,0,0,0.30);
-    --glass-inner: inset 0 1px 0 var(--glass-hi), inset 0 0 0 1px var(--glass-edge), inset 0 -10px 22px rgba(0,0,0,0.16);
+    --radius: 22px;
+    --radius-sm: 14px;
+    --blur: saturate(180%) blur(22px);
+    /* iOS Control Center recipe: nearly CLEAR fill (backdrop reads through) + bright rim + outer halo */
+    --glass: linear-gradient(150deg, rgba(255,255,255,0.16), rgba(255,255,255,0.02) 40%, rgba(255,255,255,0.08));
+    --glass-soft: linear-gradient(150deg, rgba(255,255,255,0.10), rgba(255,255,255,0.01) 45%, rgba(255,255,255,0.05));
+    --glass-shadow: 0 10px 34px rgba(0,0,0,0.30), 0 0 0 0.5px rgba(255,255,255,0.12), 0 0 26px rgba(232,180,85,0.12);
+    /* rim light on top, NO dark inner mud */
+    --glass-inner: inset 0 1px 0 var(--glass-hi), inset 0 0 0 1px var(--glass-edge), inset 0 8px 22px rgba(255,255,255,0.05);
   }
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html { -webkit-text-size-adjust: 100%; }
@@ -47,12 +48,13 @@
     line-height: 1.55;
     min-height: 100vh;
     padding-bottom: env(safe-area-inset-bottom);
-    /* bright, color-pooled backdrop so glass has vivid light to catch and refract */
+    /* vivid color-pooled backdrop: the clear glass reveals THIS, so it must be rich (no real wallpaper on a web page) */
     background:
-      radial-gradient(90% 55% at 8% -5%, rgba(232, 180, 85, 0.40), transparent 55%),
-      radial-gradient(95% 60% at 100% 6%, rgba(110, 140, 230, 0.36), transparent 60%),
-      radial-gradient(120% 75% at 50% 105%, rgba(150, 90, 220, 0.30), transparent 65%),
-      linear-gradient(170deg, #20202c 0%, #12121a 50%, #0a0a10 100%);
+      radial-gradient(85% 50% at 6% -8%, rgba(245, 170, 70, 0.65), transparent 55%),
+      radial-gradient(90% 55% at 102% 4%, rgba(90, 130, 245, 0.58), transparent 60%),
+      radial-gradient(110% 70% at 50% 108%, rgba(165, 80, 230, 0.50), transparent 65%),
+      radial-gradient(70% 50% at 75% 50%, rgba(225, 70, 130, 0.32), transparent 60%),
+      linear-gradient(170deg, #241f30 0%, #15131f 50%, #0c0a12 100%);
     background-attachment: fixed;
   }
   .wrap { max-width: 720px; margin: 0 auto; padding: 28px 20px 80px; }
