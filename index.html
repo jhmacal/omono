@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>O'Mono</title>
+<meta name="description" content="The bedazzler. Structured prompts in RTCI CEFT.">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="O'Mono">
+<meta name="theme-color" content="#0c0c10">
+<style>
+  :root {
+    /* Liquid Glass palette — translucent surfaces over a luminous backdrop */
+    --bg: #0a0a0c;
+    --surface: rgba(22, 22, 28, 0.55);
+    --surface-2: rgba(28, 28, 34, 0.6);
+    --glass-hi: rgba(255, 255, 255, 0.10);   /* specular top edge */
+    --glass-lo: rgba(255, 255, 255, 0.03);
+    --border: rgba(255, 255, 255, 0.14);
+    --border-soft: rgba(255, 255, 255, 0.07);
+    --text: #f4f4f8;
+    --text-dim: #b3b3bf;
+    --text-faint: #74747f;
+    --gold: #e0ad4d;
+    --gold-hi: #f7d68f;
+    --gold-soft: rgba(224, 173, 77, 0.16);
+    --gold-border: rgba(224, 173, 77, 0.55);
+    --red: #e5484d;
+    --green: #46a758;
+    --radius: 18px;
+    --radius-sm: 12px;
+    --blur: saturate(180%) blur(28px);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+    font-size: 15px;
+    line-height: 1.55;
+    min-height: 100vh;
+    padding-bottom: env(safe-area-inset-bottom);
+    /* luminous, color-pooled backdrop so the glass panels have something to refract */
+    background:
+      radial-gradient(110% 70% at 12% 0%, rgba(224, 173, 77, 0.18), transparent 55%),
+      radial-gradient(120% 80% at 100% 8%, rgba(90, 120, 200, 0.16), transparent 60%),
+      radial-gradient(140% 90% at 50% 100%, rgba(120, 80, 180, 0.12), transparent 65%),
+      linear-gradient(170deg, #16161c 0%, #0c0c10 55%, #08080b 100%);
+    background-attachment: fixed;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 28px 20px 80px; }
+
+  /* Header */
+  header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 6px; }
+  .wordmark {
+    font-family: ui-serif, "New York", Georgia, serif;
+    font-size: 30px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    color: var(--text);
+  }
+  .wordmark .apo { color: var(--gold); text-shadow: 0 0 14px rgba(224, 173, 77, 0.5); }
+  .tagline {
+    font-family: ui-serif, "New York", Georgia, serif;
+    font-style: italic;
+    color: var(--text-dim);
+    font-size: 14px;
+    margin-bottom: 26px;
+  }
+  .header-actions { display: flex; gap: 10px; }
+  .icon-btn {
+    background: var(--glass-lo);
+    -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur);
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    border-radius: 11px;
+    padding: 7px 12px;
+    font-size: 13px;
+    cursor: pointer;
+    box-shadow: inset 0 1px 0 var(--glass-hi);
+    transition: all .15s ease;
+  }
+  .icon-btn:hover { color: var(--text); border-color: var(--gold-border); }
+  .icon-btn.attention { border-color: var(--gold-border); color: var(--gold-hi); }
+
+  /* Panels — frosted glass */
+  .panel {
+    background: var(--surface);
+    -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius);
+    padding: 18px;
+    margin-bottom: 16px;
+    box-shadow: inset 0 1px 0 var(--glass-hi), 0 8px 30px rgba(0, 0, 0, 0.28);
+  }
+  .panel h2 {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-faint);
+    margin-bottom: 12px;
+  }
+  .hidden { display: none !important; }
+
+  /* Settings */
+  .field-row { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+  .field-row label { font-size: 13px; color: var(--text-dim); }
+  input[type="password"], input[type="text"], select, textarea {
+    background: rgba(10, 10, 14, 0.45);
+    -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font: inherit;
+    padding: 10px 12px;
+    width: 100%;
+    outline: none;
+    box-shadow: inset 0 1px 0 var(--glass-hi);
+    transition: border-color .15s ease, box-shadow .15s ease;
+  }
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--gold-border);
+    box-shadow: inset 0 1px 0 var(--glass-hi), 0 0 0 3px var(--gold-soft);
+  }
+  select { -webkit-appearance: none; appearance: none; }
+  .note { font-size: 12.5px; color: var(--text-faint); }
+
+  /* Composer */
+  #idea {
+    min-height: 110px;
+    resize: vertical;
+    font-size: 15px;
+    line-height: 1.6;
+  }
+  .composer-foot { display: flex; gap: 10px; margin-top: 12px; align-items: center; flex-wrap: wrap; }
+  .composer-foot select { width: auto; flex: 0 0 auto; font-size: 13.5px; padding: 9px 30px 9px 12px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23b3b3bf' fill='none' stroke-width='1.5'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 11px center; }
+  /* primary action as a lit glass lozenge */
+  .btn-primary {
+    background: linear-gradient(180deg, var(--gold-hi), var(--gold));
+    color: #1a1505;
+    border: none;
+    border-radius: var(--radius-sm);
+    font: inherit;
+    font-weight: 600;
+    font-size: 14.5px;
+    padding: 10px 22px;
+    cursor: pointer;
+    margin-left: auto;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 2px 8px rgba(0, 0, 0, 0.3), 0 0 22px rgba(224, 173, 77, 0.28);
+    transition: filter .15s ease, transform .05s ease;
+  }
+  .btn-primary:hover { filter: brightness(1.06); }
+  .btn-primary:active { transform: scale(0.985); }
+  .btn-primary:disabled { opacity: 0.45; cursor: default; box-shadow: none; }
+  .kbd-hint { font-size: 12px; color: var(--text-faint); }
+
+  /* Loading */
+  .loading { display: flex; align-items: center; gap: 12px; padding: 22px 6px; color: var(--text-dim); font-family: ui-serif, Georgia, serif; font-style: italic; }
+  .spot {
+    width: 14px; height: 14px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, var(--gold-hi), var(--gold));
+    box-shadow: 0 0 14px rgba(224, 173, 77, 0.55);
+    animation: breathe 1.6s ease-in-out infinite;
+  }
+  @keyframes breathe { 0%,100% { opacity: .35; transform: scale(.85);} 50% { opacity: 1; transform: scale(1.15);} }
+
+  /* Error */
+  .error-box {
+    border: 1px solid rgba(229,72,77,.4);
+    background: rgba(229,72,77,.12);
+    -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur);
+    color: #f2b8ba;
+    border-radius: var(--radius-sm);
+    padding: 12px 14px;
+    font-size: 13.5px;
+    margin-bottom: 16px;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  /* Field cards — frosted glass tiles */
+  .fcard {
+    background: var(--surface);
+    -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    box-shadow: inset 0 1px 0 var(--glass-hi), 0 6px 22px rgba(0, 0, 0, 0.22);
+    transition: opacity .2s ease;
+  }
+  .fcard.omitted { opacity: .55; background: var(--glass-lo); border-style: dashed; box-shadow: none; }
+  .fcard-head { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .fkey {
+    font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase;
+    color: var(--gold-hi);
+  }
+  .fcard.omitted .fkey { color: var(--text-faint); }
+  .fbadge { font-size: 11px; color: var(--text-faint); border: 1px solid var(--border); border-radius: 999px; padding: 1px 9px; }
+  .ftoggle { margin-left: auto; display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-dim); cursor: pointer; user-select: none; }
+  .ftoggle input { width: auto; accent-color: var(--gold); cursor: pointer; }
+  .fcontent {
+    width: 100%;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    color: var(--text);
+    font: inherit;
+    font-size: 14.5px;
+    line-height: 1.6;
+    padding: 6px 8px;
+    resize: none;
+    overflow: hidden;
+  }
+  .fcontent:hover { border-color: var(--border); }
+  .fcontent:focus { border-color: var(--gold-border); background: rgba(10, 10, 14, 0.4); }
+  details.reason { margin-top: 8px; }
+  details.reason summary {
+    font-size: 12px; color: var(--text-faint); cursor: pointer; list-style: none; user-select: none;
+  }
+  details.reason summary::before { content: "› "; color: var(--gold); }
+  details.reason[open] summary::before { content: "⌄ "; }
+  details.reason p { font-size: 13px; color: var(--text-dim); padding: 8px 2px 2px 14px; border-left: 2px solid var(--gold-border); margin-left: 2px; margin-top: 6px; }
+
+  .overall {
+    font-family: ui-serif, Georgia, serif; font-style: italic;
+    color: var(--text-dim); font-size: 14px;
+    padding: 4px 6px 14px;
+  }
+
+  /* Assembled */
+  .assembled-panel { position: relative; }
+  #assembled {
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 13px;
+    line-height: 1.65;
+    color: var(--text);
+    white-space: pre-wrap;
+    word-break: break-word;
+    background: rgba(10, 10, 14, 0.45);
+    -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 14px;
+    max-height: 340px;
+    overflow-y: auto;
+    box-shadow: inset 0 1px 0 var(--glass-hi);
+  }
+  .copy-row { display: flex; gap: 10px; margin-top: 12px; align-items: center; }
+  .btn-copy {
+    background: linear-gradient(180deg, var(--gold-hi), var(--gold));
+    color: #1a1505;
+    border: none; border-radius: var(--radius-sm);
+    font: inherit; font-weight: 600; font-size: 14px;
+    padding: 10px 20px; cursor: pointer; flex: 1;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 2px 8px rgba(0, 0, 0, 0.3), 0 0 22px rgba(224, 173, 77, 0.28);
+    transition: filter .15s ease;
+  }
+  .btn-copy:hover { filter: brightness(1.06); }
+  .btn-copy.done { background: var(--green); color: #fff; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3); }
+  .btn-ghost {
+    background: var(--glass-lo);
+    -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur);
+    border: 1px solid var(--border); color: var(--text-dim);
+    border-radius: var(--radius-sm); font: inherit; font-size: 13.5px;
+    padding: 10px 16px; cursor: pointer;
+    box-shadow: inset 0 1px 0 var(--glass-hi);
+  }
+  .btn-ghost:hover { color: var(--text); border-color: var(--gold-border); }
+
+  /* History */
+  .hist-item {
+    padding: 10px 12px; border: 1px solid var(--border-soft); border-radius: var(--radius-sm);
+    background: var(--glass-lo);
+    -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur);
+    margin-bottom: 8px; cursor: pointer;
+    box-shadow: inset 0 1px 0 var(--glass-hi);
+    transition: border-color .15s ease;
+  }
+  .hist-item:hover { border-color: var(--gold-border); }
+  .hist-item .h-idea { font-size: 13.5px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .hist-item .h-meta { font-size: 11.5px; color: var(--text-faint); margin-top: 2px; }
+
+  footer { text-align: center; margin-top: 40px; }
+  footer p { font-family: ui-serif, Georgia, serif; font-style: italic; font-size: 12.5px; color: var(--text-faint); }
+
+  @media (max-width: 540px) {
+    .wrap { padding: 20px 14px 70px; }
+    .wordmark { font-size: 26px; }
+    .composer-foot { gap: 8px; }
+    .btn-primary { width: 100%; margin-left: 0; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="wordmark">O<span class="apo">'</span>Mono</div>
+    <div class="header-actions">
+      <button class="icon-btn" id="histBtn" title="History">History</button>
+      <button class="icon-btn" id="settingsBtn" title="Settings">Settings</button>
+    </div>
+  </header>
+  <div class="tagline">The bedazzler.</div>
+
+  <!-- Settings -->
+  <section class="panel hidden" id="settingsPanel">
+    <h2>Settings</h2>
+    <div class="field-row">
+      <label for="apiKey">Anthropic API key</label>
+      <input type="password" id="apiKey" placeholder="sk-ant-..." autocomplete="off">
+      <span class="note">Stored only on this device (localStorage). It never goes anywhere except directly to api.anthropic.com.</span>
+    </div>
+    <div class="field-row">
+      <label for="model">Engine</label>
+      <select id="model">
+        <option value="claude-sonnet-4-6">Claude Sonnet 4.6 (fast, cheap, default)</option>
+        <option value="claude-opus-4-8">Claude Opus 4.8 (deeper)</option>
+        <option value="claude-fable-5">Claude Fable 5 (maximum)</option>
+        <option value="claude-haiku-4-5-20251001">Claude Haiku 4.5 (cheapest)</option>
+      </select>
+    </div>
+    <button class="btn-ghost" id="saveSettings">Save</button>
+  </section>
+
+  <!-- History -->
+  <section class="panel hidden" id="histPanel">
+    <h2>History</h2>
+    <div id="histList"></div>
+    <button class="btn-ghost" id="clearHist">Clear history</button>
+  </section>
+
+  <!-- Composer -->
+  <section class="panel">
+    <h2>Raw idea</h2>
+    <textarea id="idea" placeholder="Type the idea the way it comes. O'Mono writes the monologue."></textarea>
+    <div class="composer-foot">
+      <select id="dest" title="Destination">
+        <option value="a frontier AI assistant (generic)">Any model</option>
+        <option value="Claude (Anthropic)">Claude</option>
+        <option value="ChatGPT (OpenAI)">ChatGPT</option>
+        <option value="Gemini (Google)">Gemini</option>
+        <option value="Perplexity">Perplexity</option>
+        <option value="an AI coding agent (Claude Code, Codex, Cursor)">Coding agent</option>
+      </select>
+      <span class="kbd-hint">⌘↩ to generate</span>
+      <button class="btn-primary" id="genBtn">Generate</button>
+    </div>
+  </section>
+
+  <div class="loading hidden" id="loading"><div class="spot"></div><span id="loadingMsg">Writing the monologue...</span></div>
+  <div class="error-box hidden" id="errorBox"></div>
+
+  <!-- Result -->
+  <section id="result" class="hidden">
+    <div class="overall" id="overallReason"></div>
+    <div id="fields"></div>
+    <section class="panel assembled-panel">
+      <h2>The monologue</h2>
+      <div id="assembled"></div>
+      <div class="copy-row">
+        <button class="btn-copy" id="copyBtn">Copy prompt</button>
+        <button class="btn-ghost" id="copyReasonBtn" title="Copy prompt + reasoning">With reasoning</button>
+      </div>
+    </section>
+  </section>
+
+  <footer><p>O'Mono · by J.H. MacAl · operating mode, not subject matter</p></footer>
+</div>
+
+<script>
+"use strict";
+
+/* ---------- constants ---------- */
+const FIELD_ORDER = ["role","task","context","input","constraints","examples","format","tone"];
+const FIELD_LABELS = {
+  role: "Role", task: "Task", context: "Context", input: "Input",
+  constraints: "Constraints", examples: "Examples", format: "Format", tone: "Tone"
+};
+const LS = { key: "omono_api_key", model: "omono_model", hist: "omono_history" };
+const API_URL = "https://api.anthropic.com/v1/messages";
+
+const SYSTEM_PROMPT = `You are O'Mono, an elite prompt engineer. You take a raw, unstructured idea and rewrite it as a production-grade prompt using the RTCI CEFT structure: Role, Task, Context, Input, Constraints, Examples, Format, Tone.
+
+Rules:
+1. Write the prompt content in the same language the user wrote their idea in. Field labels stay in English.
+2. "role" content always starts with "You are" (or its equivalent in the user's language).
+3. Decide, field by field, whether the field earns its place in THIS prompt. Not every prompt needs all eight. A field that adds no signal is noise.
+4. For EVERY field, included or not, you must provide reasoning. If included: why, and what it contributes. If omitted: why it would add noise or redundancy here.
+5. Even for omitted fields, still draft plausible content, so the user can opt it back in.
+6. Tailor the prompt to the destination platform the user names, when it changes anything material (e.g. coding agents want file-level specificity; Perplexity wants research framing).
+7. Content must be concrete and specific to the user's idea. No filler, no generic boilerplate, no hedging.
+8. Keep each field tight. The whole assembled prompt should be as short as it can be while complete.
+
+Output STRICT JSON only, no markdown fences, no commentary, exactly this shape:
+{
+  "overall_reasoning": "2-3 sentences on the construction strategy for this prompt",
+  "fields": {
+    "role":        {"include": true,  "content": "...", "reasoning": "..."},
+    "task":        {"include": true,  "content": "...", "reasoning": "..."},
+    "context":     {"include": true,  "content": "...", "reasoning": "..."},
+    "input":       {"include": false, "content": "...", "reasoning": "..."},
+    "constraints": {"include": true,  "content": "...", "reasoning": "..."},
+    "examples":    {"include": false, "content": "...", "reasoning": "..."},
+    "format":      {"include": true,  "content": "...", "reasoning": "..."},
+    "tone":        {"include": true,  "content": "...", "reasoning": "..."}
+  }
+}`;
+
+/* ---------- state ---------- */
+let current = null; // { fields: {key:{include,content,reasoning}}, overall_reasoning, idea, dest, ts }
+
+/* ---------- els ---------- */
+const $ = (id) => document.getElementById(id);
+const els = {
+  settingsPanel: $("settingsPanel"), histPanel: $("histPanel"),
+  apiKey: $("apiKey"), model: $("model"),
+  idea: $("idea"), dest: $("dest"), genBtn: $("genBtn"),
+  loading: $("loading"), loadingMsg: $("loadingMsg"), errorBox: $("errorBox"),
+  result: $("result"), fields: $("fields"), overallReason: $("overallReason"),
+  assembled: $("assembled"), copyBtn: $("copyBtn"), copyReasonBtn: $("copyReasonBtn"),
+  histList: $("histList")
+};
+
+/* ---------- settings ---------- */
+function loadSettings() {
+  els.apiKey.value = localStorage.getItem(LS.key) || "";
+  els.model.value = localStorage.getItem(LS.model) || "claude-sonnet-4-6";
+  if (!els.apiKey.value) {
+    els.settingsPanel.classList.remove("hidden");
+    $("settingsBtn").classList.add("attention");
+  }
+}
+$("settingsBtn").addEventListener("click", () => {
+  els.settingsPanel.classList.toggle("hidden");
+  els.histPanel.classList.add("hidden");
+});
+$("saveSettings").addEventListener("click", () => {
+  localStorage.setItem(LS.key, els.apiKey.value.trim());
+  localStorage.setItem(LS.model, els.model.value);
+  els.settingsPanel.classList.add("hidden");
+  $("settingsBtn").classList.remove("attention");
+});
+
+/* ---------- history ---------- */
+function getHist() {
+  try { return JSON.parse(localStorage.getItem(LS.hist) || "[]"); } catch { return []; }
+}
+function pushHist(entry) {
+  const h = getHist();
+  h.unshift(entry);
+  localStorage.setItem(LS.hist, JSON.stringify(h.slice(0, 20)));
+}
+function renderHist() {
+  const h = getHist();
+  els.histList.innerHTML = h.length ? "" : "<p class='note'>Nothing yet.</p>";
+  h.forEach((e, i) => {
+    const d = document.createElement("div");
+    d.className = "hist-item";
+    const idea = document.createElement("div");
+    idea.className = "h-idea";
+    idea.textContent = e.idea;
+    const meta = document.createElement("div");
+    meta.className = "h-meta";
+    meta.textContent = new Date(e.ts).toLocaleString() + " · " + (e.destLabel || "");
+    d.appendChild(idea); d.appendChild(meta);
+    d.addEventListener("click", () => {
+      current = JSON.parse(JSON.stringify(e));
+      els.idea.value = e.idea;
+      renderResult();
+      els.histPanel.classList.add("hidden");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+    els.histList.appendChild(d);
+  });
+}
+$("histBtn").addEventListener("click", () => {
+  renderHist();
+  els.histPanel.classList.toggle("hidden");
+  els.settingsPanel.classList.add("hidden");
+});
+$("clearHist").addEventListener("click", () => {
+  localStorage.removeItem(LS.hist);
+  renderHist();
+});
+
+/* ---------- generation ---------- */
+const LOADING_LINES = [
+  "Writing the monologue...",
+  "Deciding what earns its place...",
+  "Cutting what reads as noise...",
+  "Setting the spotlight..."
+];
+let loadingTimer = null;
+
+async function generate() {
+  const idea = els.idea.value.trim();
+  if (!idea) { els.idea.focus(); return; }
+  const key = localStorage.getItem(LS.key);
+  if (!key) {
+    els.settingsPanel.classList.remove("hidden");
+    els.apiKey.focus();
+    return;
+  }
+  setError(null);
+  els.genBtn.disabled = true;
+  els.loading.classList.remove("hidden");
+  let li = 0;
+  loadingTimer = setInterval(() => {
+    li = (li + 1) % LOADING_LINES.length;
+    els.loadingMsg.textContent = LOADING_LINES[li];
+  }, 2400);
+
+  try {
+    const resp = await fetch(API_URL, {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        "x-api-key": key,
+        "anthropic-version": "2023-06-01",
+        "anthropic-dangerous-direct-browser-access": "true"
+      },
+      body: JSON.stringify({
+        model: localStorage.getItem(LS.model) || "claude-sonnet-4-6",
+        max_tokens: 4096,
+        system: SYSTEM_PROMPT,
+        messages: [{
+          role: "user",
+          content: "Destination platform: " + els.dest.value +
+                   "\n\nRaw idea:\n" + idea
+        }]
+      })
+    });
+    const data = await resp.json();
+    if (!resp.ok) {
+      throw new Error((data && data.error && data.error.message) ? data.error.message : ("HTTP " + resp.status));
+    }
+    const text = (data.content || []).filter(b => b.type === "text").map(b => b.text).join("");
+    const parsed = parseModelJSON(text);
+    current = {
+      idea, ts: Date.now(),
+      dest: els.dest.value,
+      destLabel: els.dest.options[els.dest.selectedIndex].text,
+      overall_reasoning: parsed.overall_reasoning || "",
+      fields: parsed.fields
+    };
+    pushHist(current);
+    renderResult();
+  } catch (err) {
+    setError("Generation failed: " + err.message);
+  } finally {
+    clearInterval(loadingTimer);
+    els.loading.classList.add("hidden");
+    els.genBtn.disabled = false;
+  }
+}
+
+function parseModelJSON(text) {
+  let t = text.trim();
+  const fence = t.match(/```(?:json)?\s*([\s\S]*?)```/);
+  if (fence) t = fence[1].trim();
+  const start = t.indexOf("{");
+  const end = t.lastIndexOf("}");
+  if (start === -1 || end === -1) throw new Error("Model did not return JSON.");
+  const obj = JSON.parse(t.slice(start, end + 1));
+  if (!obj.fields) throw new Error("Malformed response: missing fields.");
+  FIELD_ORDER.forEach(k => {
+    if (!obj.fields[k]) obj.fields[k] = { include: false, content: "", reasoning: "Not addressed by the model." };
+  });
+  return obj;
+}
+
+function setError(msg) {
+  if (!msg) { els.errorBox.classList.add("hidden"); els.errorBox.textContent = ""; return; }
+  els.errorBox.textContent = msg;
+  els.errorBox.classList.remove("hidden");
+}
+
+/* ---------- render ---------- */
+function autosize(ta) {
+  ta.style.height = "auto";
+  ta.style.height = (ta.scrollHeight + 2) + "px";
+}
+
+function renderResult() {
+  if (!current) return;
+  els.result.classList.remove("hidden");
+  els.overallReason.textContent = current.overall_reasoning || "";
+  els.fields.innerHTML = "";
+
+  FIELD_ORDER.forEach(key => {
+    const f = current.fields[key];
+    const card = document.createElement("div");
+    card.className = "fcard" + (f.include ? "" : " omitted");
+
+    const head = document.createElement("div");
+    head.className = "fcard-head";
+    const k = document.createElement("span");
+    k.className = "fkey";
+    k.textContent = FIELD_LABELS[key];
+    head.appendChild(k);
+    if (!f.include) {
+      const b = document.createElement("span");
+      b.className = "fbadge";
+      b.textContent = "omitted";
+      head.appendChild(b);
+    }
+    const toggle = document.createElement("label");
+    toggle.className = "ftoggle";
+    const cb = document.createElement("input");
+    cb.type = "checkbox";
+    cb.checked = f.include;
+    cb.addEventListener("change", () => {
+      f.include = cb.checked;
+      renderResult();
+    });
+    toggle.appendChild(cb);
+    toggle.appendChild(document.createTextNode("include"));
+    head.appendChild(toggle);
+    card.appendChild(head);
+
+    const ta = document.createElement("textarea");
+    ta.className = "fcontent";
+    ta.value = f.content || "";
+    ta.rows = 1;
+    ta.addEventListener("input", () => {
+      f.content = ta.value;
+      autosize(ta);
+      renderAssembled();
+    });
+    card.appendChild(ta);
+
+    const det = document.createElement("details");
+    det.className = "reason";
+    const sum = document.createElement("summary");
+    sum.textContent = f.include ? "why this field, written this way" : "why omitted";
+    const p = document.createElement("p");
+    p.textContent = f.reasoning || "";
+    det.appendChild(sum); det.appendChild(p);
+    card.appendChild(det);
+
+    els.fields.appendChild(card);
+    autosize(ta);
+  });
+
+  renderAssembled();
+  els.result.scrollIntoView({ behavior: "smooth", block: "nearest" });
+}
+
+function assembledText() {
+  if (!current) return "";
+  return FIELD_ORDER
+    .filter(k => current.fields[k].include && (current.fields[k].content || "").trim())
+    .map(k => FIELD_LABELS[k] + ": " + current.fields[k].content.trim())
+    .join("\n\n");
+}
+
+function assembledWithReasoning() {
+  if (!current) return "";
+  let out = assembledText();
+  out += "\n\n---\nREASONING (O'Mono)\n";
+  if (current.overall_reasoning) out += "\nOverall: " + current.overall_reasoning + "\n";
+  FIELD_ORDER.forEach(k => {
+    const f = current.fields[k];
+    out += "\n" + FIELD_LABELS[k] + " [" + (f.include ? "included" : "omitted") + "]: " + (f.reasoning || "");
+  });
+  return out;
+}
+
+function renderAssembled() {
+  els.assembled.textContent = assembledText();
+}
+
+/* ---------- copy ---------- */
+async function copyText(text, btn, doneLabel) {
+  let ok = false;
+  try {
+    await navigator.clipboard.writeText(text);
+    ok = true;
+  } catch {
+    try {
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      ok = document.execCommand("copy");
+      document.body.removeChild(ta);
+    } catch { ok = false; }
+  }
+  if (btn) {
+    const orig = btn.textContent;
+    btn.textContent = ok ? doneLabel : "Copy failed, select manually";
+    if (ok) btn.classList.add("done");
+    setTimeout(() => { btn.textContent = orig; btn.classList.remove("done"); }, 1800);
+  }
+}
+els.copyBtn.addEventListener("click", () => copyText(assembledText(), els.copyBtn, "Copied. Go perform."));
+els.copyReasonBtn.addEventListener("click", () => copyText(assembledWithReasoning(), els.copyReasonBtn, "Copied"));
+
+/* ---------- wiring ---------- */
+els.genBtn.addEventListener("click", generate);
+document.addEventListener("keydown", (e) => {
+  if ((e.metaKey || e.ctrlKey) && e.key === "Enter") { e.preventDefault(); generate(); }
+});
+
+loadSettings();
+
+/* ---------- PWA ---------- */
+if ("serviceWorker" in navigator && location.protocol === "https:") {
+  navigator.serviceWorker.register("sw.js").catch(() => {});
+}
+</script>
+</body>
+</html>
