@@ -1,4 +1,4 @@
-const CACHE = "omono-v5";
+const CACHE = "omono-v6";
 const ASSETS = ["./index.html", "./manifest.json", "./icons/icon-192-v5.png", "./icons/icon-512-v5.png", "./icons/apple-touch-icon-v5.png", "./icons/sliders-v5.png", "./icons/wordmark-graphite-v5.png", "./icons/wordmark-white-v5.png", "./apple-touch-icon.png", "./apple-touch-icon-precomposed.png"];
 
 self.addEventListener("install", (e) => {
