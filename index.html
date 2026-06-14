@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>O'Mono</title>
+<title>O'Mono™</title>
 <meta name="description" content="Structured prompts in RTCI CEFT.">
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="O'Mono">
+<meta name="apple-mobile-web-app-title" content="O'Mono™">
 <meta name="theme-color" content="#0c0c10">
 <style>
   :root {
@@ -94,6 +94,14 @@
     color: var(--text);
   }
   .wordmark .apo { color: var(--gold); text-shadow: 0 0 14px rgba(224, 173, 77, 0.5); }
+  .wordmark .tm {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    vertical-align: super;
+    margin-left: 2px;
+    color: var(--text-faint);
+  }
   .tagline {
     font-family: ui-serif, "New York", Georgia, serif;
     font-style: italic;
@@ -406,7 +414,7 @@
 <div class="wrap">
 
   <header>
-    <div class="wordmark">O<span class="apo">'</span>Mono</div>
+    <div class="wordmark">O<span class="apo">'</span>Mono<span class="tm">™</span></div>
     <div class="header-actions">
       <button class="icon-btn" id="histBtn" title="History">History</button>
       <button class="icon-btn" id="settingsBtn" title="Settings">Settings</button>
@@ -444,7 +452,7 @@
   <!-- Composer -->
   <section class="panel">
     <h2>Raw idea</h2>
-    <textarea id="idea" placeholder="Type the idea the way it comes. O'Mono writes the monologue."></textarea>
+    <textarea id="idea" placeholder="Type the idea the way it comes. O'Mono™ writes the prompt."></textarea>
     <div class="composer-foot">
       <select id="dest" title="Destination">
         <option value="a frontier AI assistant (generic)">Any model</option>
@@ -476,7 +484,7 @@
     </section>
   </section>
 
-  <footer><p>O'Mono</p></footer>
+  <footer><p>O'Mono™</p></footer>
 </div>
 
 <script>
@@ -491,7 +499,7 @@ const FIELD_LABELS = {
 const LS = { key: "omono_api_key", model: "omono_model", hist: "omono_history" };
 const API_URL = "https://api.anthropic.com/v1/messages";
 
-const SYSTEM_PROMPT = `You are O'Mono, an elite prompt engineer. You take a raw, unstructured idea and rewrite it as a production-grade prompt using the RTCI CEFT structure: Role, Task, Context, Input, Constraints, Examples, Format, Tone.
+const SYSTEM_PROMPT = `You are O'Mono™, an elite prompt engineer. You take a raw, unstructured idea and rewrite it as a production-grade prompt using the RTCI CEFT structure: Role, Task, Context, Input, Constraints, Examples, Format, Tone.
 
 Rules:
 1. Write the prompt content in the same language the user wrote their idea in. Field labels stay in English.
@@ -769,7 +777,7 @@ function assembledText() {
 function assembledWithReasoning() {
   if (!current) return "";
   let out = assembledText();
-  out += "\n\n---\nREASONING (O'Mono)\n";
+  out += "\n\n---\nREASONING (O'Mono™)\n";
   if (current.overall_reasoning) out += "\nOverall: " + current.overall_reasoning + "\n";
   FIELD_ORDER.forEach(k => {
     const f = current.fields[k];
