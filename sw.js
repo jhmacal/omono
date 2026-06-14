@@ -1,5 +1,5 @@
-const CACHE = "omono-v1";
-const ASSETS = ["./", "./index.html", "./manifest.json", "./icons/icon-192.png", "./icons/icon-512.png", "./icons/apple-touch-icon.png"];
+const CACHE = "omono-v2";
+const ASSETS = ["./index.html", "./manifest.json", "./icons/icon-192.png", "./icons/icon-512.png", "./icons/apple-touch-icon.png"];
 
 self.addEventListener("install", (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(ASSETS)).then(() => self.skipWaiting()));
@@ -14,6 +14,13 @@ self.addEventListener("activate", (e) => {
 self.addEventListener("fetch", (e) => {
   const url = new URL(e.request.url);
   if (url.origin !== location.origin) return; // never intercept API calls
+  if (e.request.mode === "navigate" || url.pathname.endsWith("/index.html")) {
+    e.respondWith(
+      fetch(e.request, { cache: "reload" }).catch(() => caches.match("./index.html"))
+    );
+    return;
+  }
+  if (e.request.method !== "GET") return;
   e.respondWith(
     caches.match(e.request).then((hit) => hit || fetch(e.request).then((resp) => {
       const copy = resp.clone();
