@@ -1,7 +1,7 @@
 {
   "name": "O'Mono",
   "short_name": "O'Mono",
-  "description": "The bedazzler. Structured prompts in RTCI CEFT.",
+  "description": "Structured prompts in RTCI CEFT.",
   "start_url": ".",
   "scope": ".",
   "display": "standalone",
