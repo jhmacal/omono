@@ -1,5 +1,5 @@
-const CACHE = "omono-v4";
-const ASSETS = ["./index.html", "./manifest.json", "./icons/icon-192-v4.png", "./icons/icon-512-v4.png", "./icons/apple-touch-icon-v4.png", "./apple-touch-icon.png", "./apple-touch-icon-precomposed.png"];
+const CACHE = "omono-v5";
+const ASSETS = ["./index.html", "./manifest.json", "./icons/icon-192-v5.png", "./icons/icon-512-v5.png", "./icons/apple-touch-icon-v5.png", "./icons/sliders-v5.png", "./icons/wordmark-graphite-v5.png", "./icons/wordmark-white-v5.png", "./apple-touch-icon.png", "./apple-touch-icon-precomposed.png"];
 
 self.addEventListener("install", (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.addAll(ASSETS)).then(() => self.skipWaiting()));
