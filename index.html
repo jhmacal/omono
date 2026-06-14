@@ -92,8 +92,9 @@
   .icon-btn:hover { color: var(--text); border-color: var(--gold-border); }
   .icon-btn.attention { border-color: var(--gold-border); color: var(--gold-hi); }
 
-  /* Panels — luminous frosted glass */
+  /* Panels — luminous frosted glass with glossy liquid wet-edge */
   .panel {
+    position: relative;
     background: var(--glass);
     -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur);
     border: 1px solid var(--border);
@@ -101,6 +102,16 @@
     padding: 18px;
     margin-bottom: 16px;
     box-shadow: var(--glass-inner), var(--glass-shadow);
+  }
+  /* glossy liquid wet-edge: double-curved rim that bounces light, top-left bright, bottom-right soft */
+  .panel::after, .fcard::after {
+    content: ""; position: absolute; inset: 0; pointer-events: none;
+    border-radius: inherit;
+    box-shadow:
+      inset -10px -8px 0 -9px rgba(255,255,255,0.7),
+      inset 10px 8px 0 -9px rgba(255,255,255,0.35);
+    filter: blur(1px) brightness(115%);
+    opacity: 0.75;
   }
   .panel h2 {
     font-size: 11px;
@@ -192,6 +203,7 @@
 
   /* Field cards — frosted glass tiles */
   .fcard {
+    position: relative;
     background: var(--glass);
     -webkit-backdrop-filter: var(--blur); backdrop-filter: var(--blur);
     border: 1px solid var(--border);
@@ -301,6 +313,16 @@
     .wordmark { font-size: 26px; }
     .composer-foot { gap: 8px; }
     .btn-primary { width: 100%; margin-left: 0; }
+  }
+
+  /* Fallback: if the browser can't blur the backdrop, give panels a solid dark fill
+     so white text stays readable instead of sitting on a broken transparent box. */
+  @supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+    .panel, .fcard, .icon-btn, .btn-ghost, .hist-item, #assembled,
+    input[type="password"], input[type="text"], select, textarea {
+      background: rgba(26, 24, 34, 0.92) !important;
+    }
+    .panel::after, .fcard::after { opacity: 0.4; }
   }
 </style>
 </head>
