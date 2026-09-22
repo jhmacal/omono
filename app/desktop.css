@@ -1,0 +1,1086 @@
+
+  /* ---------- tokens ----------
+     Glass outside, readable paper-like frost inside (Contracts §19). The
+     decorative shell stays highly translucent; every surface that carries a
+     sentence sits at 80-94% opacity so long text is read, not decoded. */
+  :root {
+    color-scheme: light dark;
+
+    --text: #17171d;
+    --dim: #34343c;
+    --faint: #4f4f58;
+    --rim: rgba(255,255,255,.96);
+    --line: rgba(255,255,255,.52);
+    --line-soft: rgba(255,255,255,.30);
+    --gold: #c98a1e;
+    --gold-hi: #f1b545;
+    --gold-ink: #271700;
+    /* One step darker than v3's #74500d: the small-caps panel headings sit
+       on 80-90% paper over saturated glass, where the old value sampled
+       3.99:1 in the worst state (D1.1). Dark theme keeps its own value. */
+    --gold-text: #5e400a;
+    --gold-border: rgba(138,94,16,.62);
+    /* Green and amber darkened one step: verdict text at the old values
+       sampled 3.6:1 on the policy panel (D1.1). Dark theme keeps its own. */
+    --green: #1f6a33;
+    --red: #a33036;
+    --amber: #8a5c00;
+
+    /* Reading surfaces. Opaque enough to read a paragraph on. */
+    --paper: rgba(255,255,255,.90);
+    --paper-strong: rgba(255,255,255,.94);
+    --paper-quiet: rgba(255,255,255,.80);
+    --paper-line: rgba(23,23,29,.12);
+
+    --panel-glint:
+      radial-gradient(78% 150% at 16% 82%, rgba(255,76,146,.38), transparent 54%),
+      radial-gradient(92% 150% at 70% 25%, rgba(0,184,255,.46), transparent 62%),
+      radial-gradient(80% 150% at 104% 90%, rgba(122,86,255,.26), transparent 58%),
+      linear-gradient(180deg, rgba(255,255,255,.34), rgba(255,255,255,.08) 34%, rgba(0,0,0,.035) 100%),
+      rgba(29,118,178,.20);
+    --lift-quiet:
+      radial-gradient(110% 130% at 14% 84%, rgba(255,76,146,.16), transparent 50%),
+      radial-gradient(110% 130% at 82% 18%, rgba(0,184,255,.17), transparent 60%),
+      linear-gradient(180deg, rgba(255,255,255,.20), rgba(255,255,255,.06)),
+      rgba(20,110,170,.10);
+    --lift:
+      radial-gradient(110% 130% at 14% 84%, rgba(255,76,146,.30), transparent 50%),
+      radial-gradient(110% 130% at 82% 18%, rgba(0,184,255,.32), transparent 60%),
+      linear-gradient(180deg, rgba(255,255,255,.34), rgba(255,255,255,.10)),
+      rgba(20,110,170,.18);
+    --well:
+      radial-gradient(92% 140% at 12% 84%, rgba(255,76,146,.20), transparent 48%),
+      radial-gradient(110% 150% at 78% 22%, rgba(0,184,255,.22), transparent 62%),
+      linear-gradient(180deg, rgba(255,255,255,.72), rgba(255,255,255,.86) 42%),
+      rgba(255,255,255,.88);
+    --well-strong:
+      radial-gradient(92% 140% at 12% 84%, rgba(255,76,146,.22), transparent 48%),
+      radial-gradient(110% 150% at 78% 22%, rgba(0,184,255,.24), transparent 62%),
+      linear-gradient(180deg, rgba(255,255,255,.78), rgba(255,255,255,.92) 42%),
+      rgba(255,255,255,.93);
+    --rim-inner:
+      inset 0 1px 0 var(--rim),
+      inset 0 0 0 1px rgba(255,255,255,.26),
+      inset 11px 0 24px rgba(255,76,146,.10),
+      inset -13px 0 26px rgba(0,184,255,.12),
+      inset 0 -1px 0 rgba(0,0,0,.10);
+    --well-shadow: 0 1px 2px rgba(0,0,0,.16), 0 14px 34px rgba(0,0,0,.12);
+    --shell-border: rgba(255,255,255,.68);
+    --focus-ring: rgba(201,138,18,.48);
+
+    /* Keyline for text that sits on the glass shell rather than on a panel.
+       The ink is white in both themes, so the keyline is dark in both: it is the
+       outline that keeps white legible where the backdrop is also light. No
+       shadow, by decision. */
+    --glass-stroke: rgba(0,0,0,.55);
+  }
+
+  /* Dark mode keeps the same glass identity: same rounded contour, same pink /
+     blue / lavender atmosphere, same gold. Only the reading surfaces invert. */
+  :root[data-theme="dark"] {
+    /* Light ink, so the keyline is dark. */
+    --glass-stroke: rgba(0,0,0,.50);
+
+    --text: #f3f2f7;
+    --dim: #d7d5de;
+    --faint: #a9a6b2;
+    --rim: rgba(255,255,255,.22);
+    --line: rgba(255,255,255,.20);
+    --line-soft: rgba(255,255,255,.12);
+    --gold: #d9a341;
+    --gold-hi: #f3c470;
+    --gold-ink: #1d1200;
+    --gold-text: #f0c574;
+    --gold-border: rgba(240,197,116,.55);
+    --green: #6fd08c;
+    --red: #f0868c;
+    --amber: #e0b25c;
+
+    --paper: rgba(22,22,28,.90);
+    --paper-strong: rgba(18,18,24,.94);
+    --paper-quiet: rgba(26,26,33,.80);
+    --paper-line: rgba(255,255,255,.14);
+
+    --panel-glint:
+      radial-gradient(78% 150% at 16% 82%, rgba(255,76,146,.30), transparent 54%),
+      radial-gradient(92% 150% at 70% 25%, rgba(0,184,255,.32), transparent 62%),
+      radial-gradient(80% 150% at 104% 90%, rgba(122,86,255,.28), transparent 58%),
+      linear-gradient(180deg, rgba(255,255,255,.10), rgba(0,0,0,.30) 40%, rgba(0,0,0,.42) 100%),
+      rgba(14,16,26,.62);
+    --lift:
+      radial-gradient(110% 130% at 14% 84%, rgba(255,76,146,.22), transparent 50%),
+      radial-gradient(110% 130% at 82% 18%, rgba(0,184,255,.24), transparent 60%),
+      linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.03)),
+      rgba(20,22,34,.58);
+    --lift-quiet:
+      radial-gradient(110% 130% at 14% 84%, rgba(255,76,146,.12), transparent 50%),
+      radial-gradient(110% 130% at 82% 18%, rgba(0,184,255,.13), transparent 60%),
+      linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02)),
+      rgba(20,22,34,.34);
+    --well:
+      linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02) 42%),
+      rgba(20,20,26,.88);
+    --well-strong:
+      linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.03) 42%),
+      rgba(24,24,31,.93);
+    --rim-inner:
+      inset 0 1px 0 rgba(255,255,255,.16),
+      inset 0 0 0 1px rgba(255,255,255,.07),
+      inset 11px 0 24px rgba(255,76,146,.10),
+      inset -13px 0 26px rgba(0,184,255,.12),
+      inset 0 -1px 0 rgba(0,0,0,.34);
+    --well-shadow: 0 1px 2px rgba(0,0,0,.42), 0 14px 34px rgba(0,0,0,.34);
+    --shell-border: rgba(255,255,255,.24);
+    --focus-ring: rgba(243,196,112,.52);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
+  html, body { width: 100%; height: 100%; overflow: hidden; border-radius: 26px; }
+  body {
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, sans-serif;
+    font-size: 15px;
+    line-height: 1.55;
+    position: relative;
+    background: transparent;
+    isolation: isolate;
+  }
+  /* One layer owns the outer contour. The native BrowserWindow adds neither
+     shadow nor vibrancy behind this radius (Contracts §19). */
+  body::before {
+    content: ""; position: fixed; inset: 0; pointer-events: none; border-radius: 26px; z-index: 0;
+    border: 1px solid var(--shell-border);
+    background: var(--panel-glint);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.92), inset 0 0 0 1px rgba(255,255,255,.28),
+      inset 18px 0 34px rgba(255,76,146,.24), inset -18px 0 34px rgba(0,184,255,.28), inset 0 -1px 0 rgba(0,0,0,.10);
+  }
+  :root[data-theme="dark"] body::before {
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.16), inset 0 0 0 1px rgba(255,255,255,.06),
+      inset 18px 0 34px rgba(255,76,146,.18), inset -18px 0 34px rgba(0,184,255,.20), inset 0 -1px 0 rgba(0,0,0,.42);
+  }
+
+  /* The window drags ONLY from this strip. Everything else behaves like a normal app. */
+  #dragstrip { position: fixed; top: 0; left: 0; right: 0; height: 20px; -webkit-app-region: drag; z-index: 40; }
+  #resizeGrip {
+    position: fixed; top: 2px; right: 2px; width: 22px; height: 22px; z-index: 60;
+    border: 0; border-radius: 0 20px 0 10px; background: transparent; color: transparent;
+    -webkit-app-region: no-drag; cursor: nesw-resize;
+  }
+  #resizeGrip::before, #resizeGrip::after {
+    content: ""; position: absolute; width: 9px; height: 1px; right: 4px;
+    background: var(--gold-border); transform: rotate(-45deg); transform-origin: right center;
+  }
+  #resizeGrip::before { top: 7px; }
+  #resizeGrip::after { top: 11px; width: 6px; }
+  #resizeGrip:hover::before, #resizeGrip:hover::after,
+  #resizeGrip.active::before, #resizeGrip.active::after { background: var(--gold); }
+
+  .sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  }
+
+  .view { position: absolute; inset: 0; padding: 22px 14px 12px; display: flex; flex-direction: column; z-index: 1; }
+  .hidden { display: none !important; }
+
+  .brandmark { width: 82px; height: auto; flex: 0 0 auto; object-fit: contain; }
+  :root[data-theme="dark"] .brandmark { filter: invert(1) brightness(1.6) saturate(0); }
+
+  textarea, input, select {
+    background: var(--well); border: 1px solid var(--line); border-radius: 12px;
+    color: var(--text); font: inherit; font-weight: 400; outline: none; user-select: text;
+    -webkit-font-smoothing: antialiased;
+    box-shadow: var(--rim-inner), var(--well-shadow); text-shadow: none;
+    padding: 9px 12px;
+  }
+  textarea::placeholder, input::placeholder { color: var(--faint); font-weight: 400; text-shadow: none; }
+  /* Focus is one restrained ring, not a frame. Two things were wrong: the border
+     colour changed to a muddy brown UNDER an almost-opaque brown ring, and the
+     ring keyed off :focus while the idea field autofocuses on load — so every
+     launch opened with a heavy brown box around it that nobody had asked for.
+
+     :focus-visible does not help: the spec has text fields always match it while
+     focused, because you must be able to see where typing goes. So the ring is
+     softened instead of hidden. It is now 1px of gold at low alpha rather than
+     2px of near-opaque brown, and the field still lights up when focused, which
+     together mark focus clearly without drawing a frame around it. */
+  textarea:focus, input:focus, select:focus {
+    background: var(--well-strong);
+    box-shadow: var(--rim-inner), var(--well-shadow), 0 0 0 1px var(--focus-ring);
+  }
+  select {
+    appearance: none; -webkit-appearance: none; font-size: 13px; padding: 6px 24px 6px 10px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='5'%3E%3Cpath d='M1 1l3 3 3-3' stroke='%23555' fill='none' stroke-width='1.25'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 8px center; background-size: 8px 5px;
+  }
+
+  .btn { border: none; border-radius: 999px; font: inherit; font-weight: 600; cursor: pointer; }
+  /* Visible focus everywhere, in both themes.
+
+     Text fields are deliberately NOT in this list. They carry their own focus
+     treatment above (a lit background and a 1px ring), and stacking a 2px
+     offset outline on top of that drew a double frame. Because the spec has
+     text fields always match :focus-visible while focused, and the idea box
+     autofocuses on launch, that frame appeared every time the window opened.
+     One indicator per control. */
+  button:focus-visible, [tabindex]:focus-visible, a:focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 2px;
+  }
+  .btn-gold {
+    padding: 8px 18px; font-size: 14px; color: var(--gold-ink);
+    background: linear-gradient(180deg, var(--gold-hi), var(--gold));
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.65), inset 0 -1px 0 rgba(78,50,0,.25), 0 1px 3px rgba(0,0,0,.25);
+  }
+  .btn-gold:hover { filter: brightness(1.06); }
+  .btn-gold:disabled { opacity: .5; cursor: default; box-shadow: none; }
+  .btn-ghost {
+    color: var(--text); padding: 6px 12px; font-size: 13px; font-weight: 500;
+    background: var(--lift); border: 1px solid var(--line);
+    box-shadow: var(--rim-inner), 0 1px 2px rgba(0,0,0,.10);
+  }
+  /* The one action pill. It used to be bare text with the pill treatment applied
+     as a one-off to two buttons in the compose foot, so the same control looked
+     like a pill there and like floating grey text in History, Learn, Verify,
+     Watch, Result, Settings and the Creator sheet. It is defined once here and
+     every view gets it. */
+  .tbtn {
+    font: inherit; font-size: 13px; cursor: pointer; white-space: nowrap;
+    color: var(--text); background: var(--lift);
+    border: 1px solid var(--line); border-radius: 999px; padding: 4px 10px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.58), 0 1px 2px rgba(0,0,0,.07);
+    -webkit-backdrop-filter: blur(10px) saturate(115%);
+    backdrop-filter: blur(10px) saturate(115%);
+  }
+  .tbtn:hover { color: var(--text); border-color: var(--gold-border); }
+  /* The count of prompts still waiting for a Worked / Partly / Failed answer
+     (D4). Hidden at zero. */
+  .vbadge {
+    display: inline-block; min-width: 15px; text-align: center; margin-left: 2px;
+    border-radius: 999px; padding: 0 5px; font-size: 11px; font-weight: 750;
+    background: linear-gradient(180deg, var(--gold-hi), var(--gold)); color: var(--gold-ink);
+  }
+  /* Round two (R6): the pointer moment. A small transient cue anchored to
+     the Verification button, once per session, about three seconds. It
+     points, it never asks, it is never a modal. */
+  .vpointer {
+    position: fixed; z-index: 45; pointer-events: none;
+    background: var(--paper-strong); border: 1px solid var(--gold);
+    border-radius: 10px; padding: 6px 11px; font-size: 13px; font-weight: 600;
+    color: var(--text); box-shadow: 0 4px 14px rgba(0,0,0,.18);
+    animation: vpointer-in .25s ease-out both;
+  }
+  .vpointer::after {
+    content: ""; position: absolute; bottom: -5px; left: 50%; margin-left: -5px;
+    width: 9px; height: 9px; transform: rotate(45deg);
+    background: var(--paper-strong);
+    border-right: 1px solid var(--gold); border-bottom: 1px solid var(--gold);
+  }
+  @keyframes vpointer-in { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
+  .vpointer-highlight { outline: 2px solid var(--gold) !important; outline-offset: 2px; }
+  @media (prefers-reduced-motion: reduce) {
+    .vpointer { animation: none !important; }
+  }
+  .tbtn[aria-pressed="true"] {
+    color: var(--gold-ink); border-color: var(--gold); font-weight: 650;
+    background: linear-gradient(180deg, rgba(241,181,69,.30), rgba(201,138,30,.20)), var(--well);
+  }
+  :root[data-theme="dark"] .tbtn[aria-pressed="true"] { color: var(--gold-text); }
+
+
+  .topbar { display: flex; align-items: center; gap: 8px; min-height: 26px; flex: 0 0 auto; margin-bottom: 8px; flex-wrap: wrap; }
+  .topbar .title { font-size: 11px; font-weight: 750; letter-spacing: .14em; text-transform: uppercase; color: var(--gold-text); }
+  .spacer { flex: 1; }
+  /* The one internal scroll surface. The window grows upward to its compact
+     maximum and then this scrolls, so no state can take over the display. */
+  .body { flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden; display: flex; flex-direction: column; gap: 9px; padding-bottom: 4px; }
+  .footbar { display: flex; align-items: center; gap: 8px; flex: 0 0 auto; margin-top: 8px; }
+
+  .back-pill {
+    display: inline-flex; align-items: center; gap: 7px; border: 1px solid var(--line);
+    border-radius: 999px; padding: 4px 12px 4px 9px; background: var(--lift); color: var(--gold-ink);
+    box-shadow: var(--rim-inner), 0 1px 2px rgba(0,0,0,.10); cursor: pointer; font-family: inherit;
+    flex: 0 0 auto; max-width: 62%;
+  }
+  .back-pill:hover { border-color: var(--gold-border); }
+  /* Ink is --gold-ink, not --gold-text: this pill sits on translucent glass and
+     the sampled contrast of --gold-text there was 3.65:1, under the 4.5 floor
+     the contrast law sets (D1.1, visual-audit before-findings). */
+  .back-pill .fname { overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+  .back-pill .arrow { color: var(--gold-ink); font-size: 15px; line-height: 1; }
+  :root[data-theme="dark"] .back-pill { color: var(--gold-text); }
+  :root[data-theme="dark"] .back-pill .arrow { color: var(--gold-text); }
+
+  /* ---------- reading surfaces ---------- */
+  .panel {
+    background: var(--paper); border: 1px solid var(--paper-line); border-radius: 14px;
+    padding: 11px 13px; user-select: text; overflow-wrap: anywhere;
+    -webkit-backdrop-filter: blur(14px) saturate(120%); backdrop-filter: blur(14px) saturate(120%);
+  }
+  .panel.quiet { background: var(--paper-quiet); }
+  .panel.strong { background: var(--paper-strong); }
+  .panel h3 { font-size: 11px; font-weight: 750; letter-spacing: .11em; text-transform: uppercase;
+    color: var(--gold-text); margin-bottom: 5px; }
+  .panel p { font-size: 15px; line-height: 1.6; }
+  .fieldlabel { font-size: 11px; font-weight: 750; letter-spacing: .11em; text-transform: uppercase; color: var(--gold-text); }
+  /* Quiet ink is --dim, not --faint: on the 80% quiet surfaces over saturated
+     glass, --faint sampled under the 4.5 floor, including the safeguards
+     fallback line itself (D1.1). Placeholders keep --faint; they are hints. */
+  .snote { font-size: 13px; color: var(--dim); user-select: text; }
+  .counter { font-size: 13px; color: var(--dim); }
+  /* R3: a reasoning-panel row. It reads as the note it replaced and behaves as
+     the control it now is, because two of the fourteen components reach no chip
+     on any destination and this is the only door they have. */
+  .whyrow {
+    display: block; width: 100%; text-align: left;
+    font: inherit; font-size: 13px; color: var(--dim);
+    background: none; border: 0; border-radius: 8px;
+    padding: 4px 6px; margin: 0 -6px; cursor: pointer;
+  }
+  .whyrow:hover, .whyrow:focus-visible { background: rgba(255,255,255,0.08); color: var(--text); }
+
+  /* ---------- compose ---------- */
+  /* The wordmark sits to the left of the writing column. Everything below the
+     idea box lines up with the BOX, not with the window edge, so the column
+     reads as one thing. 82px mark + 10px gap. */
+  :root { --compose-indent: 92px; --compose-write-gutter: 92px; }
+  .crow { display: flex; gap: 10px; align-items: flex-start; flex: 0 0 auto; }
+  .crow .brandmark { margin-top: 12px; }
+  #ideaSlot { flex: 1; display: flex; min-width: 0; }
+  #idea { width: 100%; height: 76px; min-height: 76px; max-height: 210px; resize: none; overflow-y: auto;
+    font-size: 15px; line-height: 1.55; padding: 12px 13px; }
+  #writeBtn { width: 82px; height: 44px; font-size: 14px; margin-top: 1px; }
+  .slotchip {
+    width: 100%; display: flex; align-items: center; gap: 9px;
+    background: var(--lift); border: 1px solid var(--line); border-radius: 12px;
+    padding: 10px 12px; font-size: 14px; font-weight: 600; color: var(--dim);
+    box-shadow: var(--rim-inner), 0 1px 2px rgba(0,0,0,.10);
+  }
+  /* Errors take the input slot instead of covering the text (locked rule: no
+     loading or error overlay ever sits on top of something being read). */
+  .slotchip.err { color: var(--red); border-color: var(--gold-border); font-weight: 500; user-select: text; cursor: pointer; }
+  .wait-lesson-host { width: 100%; min-width: 0; }
+  .wait-lesson-host .lessoncard { width: 100%; }
+  .spot { width: 10px; height: 10px; border-radius: 50%; flex: 0 0 auto;
+    background: radial-gradient(circle at 35% 35%, var(--gold-hi), var(--gold));
+    box-shadow: 0 0 10px rgba(224,173,77,.5); animation: breathe 1.5s ease-in-out infinite; }
+  @keyframes breathe { 0%,100%{opacity:.3;transform:scale(.85);} 50%{opacity:1;transform:scale(1.15);} }
+
+  /* Purpose chips: small, optional, multi-select, visually subordinate, and never
+     read as evidence of competence (Contracts §18). */
+  /* The writing column is the idea box: the wordmark sits to its left and Write
+     to its right, and neither is part of it. Attach lines up with the box's left
+     edge and the purpose chips with its right, so the row reads as belonging to
+     the box rather than to the window. Write is 82px + the 10px row gap. */
+  .composerow {
+    display: flex; align-items: center; gap: 8px; flex: 0 0 auto;
+    margin-top: 8px; margin-left: var(--compose-indent);
+    margin-right: var(--compose-write-gutter); flex-wrap: wrap;
+  }
+  .chips { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; flex: 0 0 auto; }
+  .chips .chipslabel { font-size: 11px; color: var(--faint); cursor: default; }
+  /* Subordinate by contract (§18): optional, never evidence of competence, and
+     not competing with Attach or Write. Smaller type, tighter padding, a quieter
+     fill and no lifted shadow. Selection is still unmistakable, below. */
+  .pchip {
+    font: inherit; font-size: 11px; font-weight: 500; cursor: pointer;
+    border: 1px solid var(--line-soft); border-radius: 999px; padding: 2px 9px;
+    /* F1: the chips sit centered on the gradient now, so they carry their
+       own ground and ink; contrast holds anywhere on the band. */
+    color: var(--text); background: var(--well);
+  }
+  .pchip:hover { color: var(--text); border-color: var(--gold-border); }
+  /* Two controls share this class. The compose-bar purpose chips are multi-select
+     toggles and correctly carry aria-pressed; the setup strictness chips are
+     role=radio in a radiogroup and therefore carry aria-checked, where
+     aria-pressed is not valid. The stylesheet knew only the first, so the chosen
+     strictness was painted exactly like the two it was chosen over. Both
+     selectors, not one renamed. */
+  /* Selection is a tint and a stronger border rather than a gold fill, so the
+     one gold element on compose stays the Write button (D1.2). */
+  .pchip[aria-pressed="true"], .pchip[aria-checked="true"] {
+    color: var(--gold-ink); font-weight: 650; border-color: var(--gold);
+    background: linear-gradient(180deg, rgba(241,181,69,.30), rgba(201,138,30,.20)), var(--well);
+  }
+  :root[data-theme="dark"] .pchip[aria-pressed="true"],
+  :root[data-theme="dark"] .pchip[aria-checked="true"] { color: var(--text); }
+  /* No colour here. This carries .glass-text and sits on bare glass, and an ID
+     selector outranks it, so setting colour here is how the hover explanation
+     stayed grey and unreadable after everything else had gone white. */
+  /* The one SENTENCE on bare glass; everything else carrying .glass-text is a
+     short label. A hairline outline on an 11px glyph is a fraction of a pixel and
+     had nothing to work with, so this line stayed hard to read on the light part
+     of the glass after the labels were fine. It gets a real edge and a little
+     more size, and nothing else: no glow, no plate. */
+  #chipHint {
+    font-size: 13px; min-height: 17px; flex: 0 0 auto; margin-top: 3px; user-select: text;
+    -webkit-text-stroke: 0.4px rgba(0,0,0,.72);
+    font-weight: 560;
+  }
+
+  /* The row belongs to the box, not to the window: Attach lines up with the
+     box's left edge and Purpose with its right, exactly as .composerow does.
+     The right gutter is the Write button plus the row gap; without it Purpose
+     drifts under Write and the alignment the owner ruled is lost. */
+  .compose-foot { display: flex; align-items: center; gap: 6px; min-width: 0; margin-top: 8px;
+    margin-left: var(--compose-indent); margin-right: var(--compose-write-gutter);
+    flex: 0 0 auto; font-size: 12px; color: var(--faint); flex-wrap: wrap; }
+  .compose-foot > #ctxState {
+    min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  /* Layout only. The pill treatment these two used to carry alone is now .tbtn. */
+  .compose-foot #historyBtn, .compose-foot #settingsBtn {
+    flex: 0 0 auto; min-width: 0; width: auto; max-width: none;
+  }
+
+  /* ---------- first launch ---------- */
+  .obstep { display: flex; flex-direction: column; gap: 9px; }
+  .setupstep { display: flex; flex-direction: column; gap: 9px; }
+  /* P2: the translucency is identity and is never backed. Every setup text
+     routes through the landing's own legibility system — white ink with
+     the glass stroke; sentences on bare glass take the chipHint edge
+     (0.4px) exactly as the landing's one sentence does. Ink and treatment
+     only; no panel, no scrim, ever. */
+  #viewSetup .setupstep, #viewSetup .setupstep label span,
+  #viewSetup label[for], #setupTitle, #setupStepNote {
+    color: rgba(255,255,255,.94);
+    -webkit-text-stroke: 0.18px var(--glass-stroke);
+    paint-order: stroke fill;
+    font-weight: 560;
+  }
+  #viewSetup .setupstep .snote, #viewSetup .setupstep .obcheck span {
+    color: rgba(255,255,255,.94);
+    -webkit-text-stroke: 0.4px rgba(0,0,0,.72);
+    paint-order: stroke fill;
+    font-weight: 560;
+    font-size: 13px;
+  }
+  #viewSetup .setupstep .snote.glass-text { font-size: 13px; }
+  .modegrid { display: flex; flex-direction: column; gap: 7px; }
+  .modecard {
+    font: inherit; text-align: left; cursor: pointer; display: flex; flex-direction: column; gap: 3px;
+    border: 1px solid var(--line); border-radius: 12px; padding: 9px 12px;
+    background: var(--lift-quiet); color: var(--text);
+  }
+  .modecard:hover { border-color: var(--gold-border); }
+  .modecard[aria-checked="true"] {
+    border-color: var(--gold-border); background: var(--lift);
+    box-shadow: var(--rim-inner), 0 1px 2px rgba(0,0,0,.08);
+  }
+  .modecard .mt { font-size: 14px; font-weight: 650; }
+  .modecard[aria-checked="true"] .mt { color: var(--gold-ink); }
+  .modecard .md { font-size: 13px; color: var(--dim); line-height: 1.45; }
+  .obcheck { display: flex; gap: 8px; align-items: flex-start; font-size: 13px; line-height: 1.5;
+    cursor: pointer; user-select: none; }
+  .obcheck + .obcheck { margin-top: 7px; }
+  .obcheck input { flex: 0 0 auto; margin-top: 2px; }
+
+  /* ---------- protected change ----------
+     window.prompt() throws in Electron ("prompt() is not supported"), so the
+     Settings dropdowns silently did nothing: the handler raised before it ever
+     reached IPC and the select kept its new value on screen. This is the sheet
+     that replaces it. */
+  .sheet {
+    position: absolute; inset: 0; z-index: 40; display: flex; align-items: center;
+    justify-content: center; padding: 18px;
+    background: rgba(10,12,20,.34);
+    -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+  }
+  .sheet .panel { width: 100%; max-width: 380px; }
+
+  /* ---------- intermediary ---------- */
+  .intent { font-size: 16px; font-weight: 650; line-height: 1.5; }
+  .qcard { border: 1px solid var(--paper-line); border-radius: 14px; padding: 10px 12px;
+    background: var(--paper-quiet); display: flex; flex-direction: column; gap: 6px; user-select: text; }
+  .qcard .qt { font-size: 15px; font-weight: 650; }
+  .qcard .qwhy { font-size: 13px; color: var(--dim); }
+  .ynrow { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .yn { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; line-height: 1.3; cursor: pointer;
+    padding: 6px 13px; border-radius: 999px; border: 1px solid var(--line); background: var(--lift); }
+  .yn input { accent-color: var(--gold); cursor: pointer; box-shadow: none; padding: 0; }
+  /* The tint sits on an opaque well, not on bare glass: sampled contrast of the
+     label over the old translucent wash was 3.4-4.2:1 (D1.1). */
+  .yn.on { border-color: var(--gold); background: linear-gradient(180deg, rgba(241,181,69,.30), rgba(201,138,30,.20)), var(--well); font-weight: 650; }
+  /* A div, not a label wrapping the checkbox: a note field inside a label sits in
+     the label's activation region, so typing in it toggled the assumption. The
+     checkbox carries an id and the text is a label[for] beside it. */
+  .acard { display: flex; gap: 9px; align-items: flex-start; font-size: 14px; border: 1px dashed var(--line);
+    border-radius: 12px; padding: 8px 11px; user-select: text; flex-wrap: wrap; }
+  .acard input[type="checkbox"] { margin-top: 3px; accent-color: var(--gold); cursor: pointer; }
+  .acard label { cursor: pointer; flex: 1; min-width: 200px; }
+  .acard .bigbox { flex: 1 0 100%; margin-top: 6px; min-height: 44px; }
+
+  /* Free text the user writes in their own words. Locked rule ERR-OM-9: real
+     size, real padding, room to think, and a visible label above it — never a
+     skinny one-line input that says the sentence is not wanted. */
+  .bigbox {
+    font: inherit; font-size: 13px; line-height: 1.5; width: 100%;
+    min-height: 56px; resize: vertical; padding: 9px 11px;
+    border: 1px solid var(--line); border-radius: 10px;
+    background: var(--lift-quiet); color: var(--text);
+  }
+  .bigbox:focus { outline: none; border-color: var(--gold-border); }
+
+  /* Who a protected change is recorded against. Deliberately not .fieldlabel:
+     that class uppercases, and a person's name renders as they typed it. */
+  .signing { font-size: 13px; font-weight: 600; margin: 2px 0 6px; }
+
+  /* What the prompt is made of, at the top of the result where it is the first
+     thing seen. A filled button is a field that is in the prompt; an outlined
+     one is a field that was left out and is worth opening to find out why. */
+  /* The field chips, de-shouted (D1.2, D1.3): sentence case from the source
+     strings, 28px tall, see-through fill with a thin gold outline, centered on
+     the prompt box. An included chip is highlighted by a stronger border and a
+     tint, never a gold fill; an omitted chip keeps its dashed treatment,
+     dimmed, and still meets the contrast law. */
+  .compgrid { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 3px; justify-content: center; }
+  /* One height and one padding for every chip, selected or not, and a label
+     that never truncates: intrinsic width, the row wraps instead (R4). */
+  .compbtn {
+    font: inherit; font-size: 13px; font-weight: 650; cursor: pointer;
+    height: 28px; padding: 0 14px; border-radius: 999px;
+    white-space: nowrap; overflow: visible; text-overflow: clip; max-width: none;
+    border: 1.5px solid var(--gold); color: var(--text);
+    background: linear-gradient(180deg, rgba(241,181,69,.20), rgba(201,138,30,.12)), var(--well);
+  }
+  .compbtn:hover { border-color: var(--gold-hi); }
+  .compbtn.omitted {
+    background: var(--lift-quiet); color: var(--dim);
+    border: 1.5px dashed var(--line); font-weight: 500;
+  }
+  .compbtn.omitted:hover { color: var(--text); border-color: var(--gold-border); }
+  .bigbox::placeholder { color: var(--faint); }
+
+  /* The effective policy stack. Every controlling layer is visible, and the final
+     result is the same object every layer came from (Contracts §10). */
+  .layer { display: grid; grid-template-columns: 1fr auto; gap: 4px 10px; align-items: baseline;
+    padding: 6px 0; border-bottom: 1px solid var(--paper-line); }
+  .layer:last-child { border-bottom: 0; }
+  .layer .lname { font-size: 14px; }
+  .layer .lwhy { grid-column: 1 / -1; font-size: 13px; color: var(--dim); }
+  .layer.controlling .lname { font-weight: 700; }
+  .layer.controlling::before { content: ""; }
+  .verdict { font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+    border-radius: 999px; padding: 2px 9px; border: 1px solid var(--line); color: var(--dim); white-space: nowrap; }
+  .verdict.pass { color: var(--green); border-color: var(--green); }
+  .verdict.notice { color: var(--amber); border-color: var(--amber); }
+  .verdict.redact, .verdict.confirm { color: var(--amber); border-color: var(--amber); }
+  .verdict.block { color: var(--red); border-color: var(--red); }
+
+  /* Lesson triggers: small embedded pills, at most three by default, and exactly
+     one open card at a time (Contracts §7.3). */
+  .triggers { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .trigger {
+    font: inherit; font-size: 13px; font-weight: 600; cursor: pointer;
+    border: 1px solid var(--gold-border); border-radius: 999px; padding: 3px 11px;
+    color: var(--gold-ink); background: var(--lift);
+    box-shadow: var(--rim-inner), 0 1px 2px rgba(0,0,0,.06);
+  }
+  :root[data-theme="dark"] .trigger { color: var(--gold-text); }
+  :root[data-theme="dark"] .trigger[aria-expanded="true"] { color: var(--gold-text); }
+  /* Selected state is a tint and a stronger border, never a gold fill: one
+     element reads as gold per screen and it is the main action (D1.2). */
+  .trigger[aria-expanded="true"] {
+    background: linear-gradient(180deg, rgba(241,181,69,.30), rgba(201,138,30,.20)), var(--well);
+    border-color: var(--gold); color: var(--gold-ink); font-weight: 650;
+  }
+  /* R-B: ONE paper recipe for every non-main pill, on every screen. The
+     species keep their own size and radius; the fill and ink are shared,
+     and the contrast law holds anywhere on the gradient. */
+  .tbtn, .btn-ghost, .action-pill, .srcpill, .back-pill, .menuitem, .pchip {
+    background: var(--well);
+    border: 1px solid var(--line-soft);
+    color: var(--text);
+  }
+  .btn-ghost.small { font-size: 12px; padding: 3px 10px; }
+  .droppill { white-space: nowrap; }
+  .footgap { width: 14px; flex: none; }
+  /* U2: the Menu pill lives at the window's bottom right corner, constant
+     margin, on every state where it renders; fitHeight skips fixed
+     children, so the corner costs no landing height. */
+  .cornerpill { position: fixed; right: 14px; bottom: 12px; z-index: 55; }
+  /* R-A: the dropdowns. Paper panels under their pills; Escape closes, the
+     window grows to fit while open, reduce-motion snaps (no animation is
+     used at all). */
+  .dropdown {
+    position: absolute; z-index: 60; min-width: 230px;
+    background: var(--well); border: 1px solid var(--line-soft);
+    border-radius: 12px; padding: 6px;
+    box-shadow: 0 8px 26px rgba(18, 26, 40, .25);
+    display: flex; flex-direction: column; gap: 3px;
+  }
+  .dropdown.hidden { display: none; }
+  /* R-D: the advisory's one door to the why. Paper, small, never gold. */
+  .infodot { margin-left: 6px; width: 20px; height: 20px; border-radius: 999px;
+    font-size: 12px; line-height: 1; padding: 0; cursor: pointer;
+    background: var(--well); border: 1px solid var(--line-soft); color: var(--text); }
+  .infodot:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+  .policytip { margin-top: 6px; padding: 8px 11px; border-radius: 10px;
+    background: var(--paper-strong); border: 1px solid var(--line-soft);
+    box-shadow: 0 4px 14px rgba(0,0,0,.14); }
+  .dropheader {
+    font-size: 11.5px; letter-spacing: .06em; color: var(--dim);
+    padding: 5px 10px 6px; border-bottom: 1px solid var(--line-soft);
+    margin-bottom: 2px; min-height: 14px;
+  }
+  .menuitem {
+    font: inherit; font-size: 13px; text-align: left; cursor: pointer;
+    border-radius: 8px; padding: 6px 10px; display: flex; gap: 8px;
+    align-items: center; justify-content: space-between;
+  }
+  .menuitem:hover, .menuitem:focus-visible { border-color: var(--gold-border); }
+  .menuitem[aria-checked="true"] { font-weight: 700; border-color: var(--gold-border); }
+  /* P3 (over U4): satin aurora gold, the owner's chosen treatment
+     verbatim, adapted only in geometry to each button's existing size and
+     font rules. The slow aurora supersedes the no-animation rule by the
+     owner's later order, reduce-motion included. */
+  /* The gold pill is one curved surface, not a plate on a step.
+
+     It used to carry `border: 1.5px solid #a47522` and `0 5px 0 #9d783a`: a
+     drawn outline and a hard, zero-blur slab underneath. Together they read as
+     a flat plate resting on a brown ledge. The darker bottom edge belongs
+     INSIDE the gold, so the eye reads a surface rolling into its own shadow.
+
+     The satin aurora and its gradient are the owner's, verbatim, and are
+     untouched; tests/v4-audit/combined-run.audit.js asserts the animation line.
+     Only the edge treatment changed: the outline is gone, the ledge is gone,
+     and in their place are an inset top polish, an inset lower bevel, and one
+     soft cast shadow that sits under the whole pill rather than behind a step. */
+  .btn-gold {
+    border: 0;
+    border-radius: 999px;
+    background: linear-gradient(115deg, #d9ae50 0%, #f5dd96 26%, #e6bd5c 48%, #f8e5ae 71%, #d2a144 100%);
+    background-size: 180% 180%;
+    color: #231906;
+    box-shadow:
+      inset 0 4px 8px rgba(255,255,255,.38),
+      inset 0 1.5px 1.5px rgba(255,255,255,.62),
+      inset 0 -4px 7px rgba(111,62,0,.20),
+      0 5px 12px rgba(90,54,4,.20);
+    text-shadow: 0 1px rgba(255,255,255,.28);
+    animation: satinAurora 8s ease-in-out infinite;
+    transition: transform .12s cubic-bezier(.2,.9,.3,1.7), box-shadow .15s ease, filter .15s ease;
+  }
+  /* Lift and bloom. */
+  .btn-gold:not(:disabled):hover {
+    transform: translateY(-1px);
+    filter: brightness(1.05);
+    box-shadow:
+      inset 0 4px 8px rgba(255,255,255,.44),
+      inset 0 1.5px 1.5px rgba(255,255,255,.70),
+      inset 0 -4px 7px rgba(111,62,0,.18),
+      0 8px 18px rgba(90,54,4,.24);
+  }
+  /* Spring press. */
+  .btn-gold:not(:disabled):active {
+    transform: translateY(2px) scale(.987);
+    box-shadow:
+      inset 0 3px 6px rgba(255,255,255,.30),
+      inset 0 1px 1px rgba(255,255,255,.50),
+      inset 0 -3px 6px rgba(111,62,0,.24),
+      0 2px 6px rgba(90,54,4,.18);
+  }
+  @keyframes satinAurora {
+    0%, 100% { background-position: 0% 45%; }
+    50% { background-position: 100% 55%; }
+  }
+  /* F1: the chip hint floats over the empty band below the foot; it never
+     adds landing height. The prompt count is a quiet fact. */
+  .composehint { position: absolute; left: 24px; bottom: 6px; font-size: 11.5px; pointer-events: none; }
+  #composeCount { align-self: center; white-space: nowrap; }
+  .lessoncard { display: flex; flex-direction: column; gap: 7px; }
+  /* v4 single lesson card (D3). The title button is the rule itself and fills
+     the row; detail sits one tap behind it. */
+  .lessoncard.v4card { padding: 9px 11px; }
+  .lessoncard.v4card .v4title {
+    text-align: left; width: 100%; border: 0; background: transparent;
+    box-shadow: none; padding: 2px 3px; font-size: 14px; font-weight: 650;
+    color: var(--text); border-radius: 8px; white-space: normal; line-height: 1.45;
+  }
+  .lessoncard.v4card .v4title:hover { color: var(--gold-ink); }
+  :root[data-theme="dark"] .lessoncard.v4card .v4title:hover { color: var(--gold-text); }
+  /* First-ever appearance: a violet left edge and a 0.2s slide, the only
+     moving element on screen; reduce-motion swaps the slide for a fade; every
+     later appearance is quiet (D3). */
+  .lessoncard.v4card.first { border-left: 3px solid #7a56ff; animation: v4slide .2s ease-out both; }
+  @keyframes v4slide { from { transform: translateX(-8px); opacity: 0; } to { transform: none; opacity: 1; } }
+  @keyframes v4fade { from { opacity: 0; } to { opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) {
+    .lessoncard.v4card.first {
+      animation-name: v4fade !important;
+      animation-duration: .2s !important;
+      animation-iteration-count: 1 !important;
+    }
+  }
+  .lessoncard .lpart { display: flex; flex-direction: column; gap: 2px; }
+  .lessoncard .lpart .lk { font-size: 11px; font-weight: 750; letter-spacing: .11em;
+    text-transform: uppercase; color: var(--gold-text); }
+  .lessoncard .lpart .lv { font-size: 14px; line-height: 1.55; }
+  /* Pass four (L3): the v5 card anatomy. Bold hook, two plain lines, the
+     binding line behind the O'M mark, the source pill. No expansion door. */
+  .v5hook { font-size: 14px; font-weight: 750; line-height: 1.45; color: var(--text); }
+  .v5line { font-size: 13.5px; line-height: 1.5; color: var(--text); }
+  .v5bind { display: flex; align-items: baseline; gap: 7px; font-size: 12.5px;
+    line-height: 1.45; color: var(--muted); margin-top: 2px; }
+  .omark { display: inline-flex; align-items: center; flex: none; gap: 0;
+    font-weight: 800; font-size: 12px; letter-spacing: .01em; color: var(--gold-ink);
+    cursor: default; }
+  :root[data-theme="dark"] .omark { color: var(--gold-text); }
+  .omark svg { width: 7px; height: 11px; margin: 0 1px 0 1.5px; display: block; }
+  .srcpill { align-self: flex-start; font: inherit; font-size: 12px; padding: 2px 10px;
+    border-radius: 999px; border: 1px solid var(--line-soft); background: transparent;
+    color: var(--muted); cursor: pointer; margin-top: 3px; }
+  .srcpill:hover { border-color: var(--gold); color: var(--gold-ink); }
+  :root[data-theme="dark"] .srcpill:hover { color: var(--gold-text); }
+  #loadingMsg.waitlesson { cursor: pointer; text-decoration: underline dotted; text-underline-offset: 3px; }
+
+  /* Managed Enterprise: lessons written from the deployment record. This uses
+     the same glass labels, paper cards, gold taxonomy and pill controls as the
+     rest of O'Mono; the publication mock supplies hierarchy and copy only. */
+  .deployment-lessons { display: flex; flex-direction: column; gap: 12px; padding: 3px 2px 5px; }
+  .deployment-lessons-head, .deployment-lessons-foot { padding: 0 3px; }
+  .deployment-lessons-kicker { font-size: 11px; font-weight: 750; letter-spacing: .14em;
+    text-transform: uppercase; }
+  .deployment-lessons-summary, .deployment-lessons-foot { font-size: 14px; line-height: 1.5;
+    user-select: text; }
+  .deployment-summary-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 7px; }
+  .deployment-summary-cell { padding: 9px 10px; border-radius: 16px;
+    border: 1px solid var(--line); background: color-mix(in srgb, var(--panel) 86%, transparent); }
+  .deployment-summary-number { display: block; font-size: 18px; line-height: 1.1;
+    font-weight: 800; color: var(--text); }
+  .deployment-summary-label { display: block; margin-top: 3px; font-size: 10px; line-height: 1.25;
+    font-weight: 750; letter-spacing: .06em; text-transform: uppercase; color: var(--dim); }
+  .deployment-summary-detail { display: block; margin-top: 3px; font-size: 10px;
+    line-height: 1.25; color: var(--dim); }
+  .deployment-lessons-list { display: flex; flex-direction: column; gap: 10px; }
+  .deployment-lesson-card { display: grid; grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start; gap: 8px 14px; padding: 15px 17px; }
+  .deployment-lesson-copy { min-width: 0; display: flex; flex-direction: column; gap: 5px; }
+  .deployment-lesson-hook { font-size: 16px; font-weight: 750; line-height: 1.4; color: var(--text); }
+  .deployment-lesson-domain { font-size: 11px; font-weight: 750; letter-spacing: .13em;
+    text-transform: uppercase; color: var(--gold-text); }
+  .deployment-lesson-evidence { font-size: 14px; line-height: 1.5; color: var(--dim); user-select: text; }
+  .deployment-lesson-actions { display: flex; align-items: center; gap: 7px; }
+  .deployment-live { border-radius: 999px; padding: 3px 10px; color: var(--green);
+    background: rgba(64, 164, 95, .13); font-size: 11px; font-weight: 750;
+    letter-spacing: .10em; text-transform: uppercase; white-space: nowrap; }
+  .deployment-retire { background: var(--well); }
+  @media (max-width: 560px) {
+    .deployment-summary-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .deployment-lesson-card { grid-template-columns: 1fr; }
+    .deployment-lesson-actions { justify-content: flex-start; }
+  }
+
+  .reactions { display: flex; gap: 5px; flex-wrap: wrap; align-items: center; margin-top: 2px; }
+  .reaction { font: inherit; font-size: 13px; padding: 3px 10px; border-radius: 999px;
+    border: 1px solid var(--line); background: var(--lift); color: var(--dim); cursor: pointer; }
+  .reaction[aria-pressed="true"] { border-color: var(--gold-border); color: var(--gold-text); font-weight: 650; }
+
+  details.disclosure { border: 1px solid var(--paper-line); border-radius: 14px; background: var(--paper-quiet); padding: 8px 12px; }
+  details.disclosure > summary { cursor: pointer; font-size: 13px; font-weight: 650; color: var(--gold-text); list-style: none; }
+  details.disclosure > summary::-webkit-details-marker { display: none; }
+  details.disclosure > summary::before { content: "▸ "; }
+  details.disclosure[open] > summary::before { content: "▾ "; }
+  details.disclosure > *:not(summary) { margin-top: 8px; }
+
+  /* ---------- result ---------- */
+  /* The owner's height law: a window taller than its text never shows a dead
+     band. The prompt block takes whatever room the window has, so extra
+     height becomes prompt to read instead of empty glass. */
+  .promptbox { flex: 1 1 auto; display: flex; flex-direction: column; gap: 6px; min-height: 0; }
+  #finalPrompt {
+    width: 100%; flex: 1 1 auto; min-height: 132px; resize: none; overflow-y: auto;
+    font-size: 15px; line-height: 1.6; padding: 12px 13px;
+    background: var(--paper-strong); border: 1px solid var(--paper-line);
+    box-shadow: none; color: var(--text);
+  }
+  #finalPrompt:focus { background: var(--paper-strong); box-shadow: 0 0 0 2px var(--focus-ring); }
+  /* The polished gold pill, to the owner's supplied reference. The rim is
+     bevelled rather than stroked: no border declaration, so the objection to a
+     stroked edge on the Write pill is not repeated here. */
+  /* Copy prompt is the same species as Write and Confirm, and was not: it had
+     its own duller gradient (#f8e6ad to #c9902b), no aurora, and the same hard
+     ledge. Flat and brown beside the other two. It now shares the satin surface
+     and the same edge treatment; only its width and weight differ. */
+  .btn-copy { flex: 1; padding: 9px 12px; font-size: 14px; font-weight: 700;
+    border: 0; border-radius: 999px; color: #231906;
+    background: linear-gradient(115deg, #d9ae50 0%, #f5dd96 26%, #e6bd5c 48%, #f8e5ae 71%, #d2a144 100%);
+    background-size: 180% 180%;
+    box-shadow:
+      inset 0 4px 9px rgba(255,255,255,.40),
+      inset 0 1.5px 1.5px rgba(255,255,255,.66),
+      inset 0 -4px 8px rgba(111,62,0,.20),
+      0 6px 14px rgba(90,54,4,.20);
+    text-shadow: 0 1px 0 rgba(255,255,255,.38);
+    animation: satinAurora 8s ease-in-out infinite;
+    transition: transform .12s cubic-bezier(.2,.9,.3,1.7), box-shadow .15s ease, filter .15s ease; }
+  .btn-copy:not(:disabled):hover {
+    transform: translateY(-1px);
+    filter: brightness(1.05);
+    box-shadow:
+      inset 0 4px 9px rgba(255,255,255,.46),
+      inset 0 1.5px 1.5px rgba(255,255,255,.74),
+      inset 0 -4px 8px rgba(111,62,0,.18),
+      0 9px 20px rgba(90,54,4,.24); }
+  .btn-copy:not(:disabled):active {
+    transform: translateY(2px) scale(.987);
+    box-shadow:
+      inset 0 3px 7px rgba(255,255,255,.32),
+      inset 0 1px 1px rgba(255,255,255,.52),
+      inset 0 -3px 6px rgba(111,62,0,.24),
+      0 2px 7px rgba(90,54,4,.18); }
+  .btn-copy:disabled { opacity: .5; cursor: default; transform: none;
+    animation: none;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.5), 0 1px 3px rgba(0,0,0,.18); }
+  /* Confirmation is a lustre, not a colour change. The green slab replaced the
+     gold outright for 1.4 seconds, which read as a different control appearing
+     where the button had been. The pill stays gold and brightens. */
+  .btn-copy.done {
+    filter: brightness(1.12) saturate(1.06);
+    box-shadow:
+      inset 0 5px 11px rgba(255,255,255,.62),
+      inset 0 1.5px 1.5px rgba(255,255,255,.85),
+      inset 0 -4px 8px rgba(111,62,0,.14),
+      0 8px 20px rgba(90,54,4,.26); }
+  /* The label swaps by class so the confirmation cannot fight the markup. */
+  .btn-copy .done-label { display: none; }
+  .btn-copy.done .default-label { display: none; }
+  .btn-copy.done .done-label { display: inline; }
+
+  /* ---------- the gleam ----------
+     The satin aurora underneath is a slow wash across the gradient; it changes
+     the colour of the surface and never reads as a highlight travelling over
+     it. This is the second half: one narrow band of light that crosses the pill
+     and then waits, which is what makes gold look like metal rather than paint.
+
+     It is clipped to the pill by overflow, sits above the surface and below the
+     label, and is inert to the pointer. Both gold pills carry it, so Write,
+     Confirm and Copy prompt catch the light together. */
+  .btn-gold, .btn-copy {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+  }
+  /* Two numbers here are not the reference's, and both were measured rather
+     than guessed.
+
+     z-index is 1, not -1. At -1 the band paints behind the button's own
+     background and is invisible; that was tried and photographed. Positive
+     means it crosses the label, which the reference avoided by raising a span.
+     These thirteen buttons carry bare text nodes and several have their text
+     rewritten by JS, so the band is kept gentle enough to pass over a label
+     without washing it instead.
+
+     The blur is 3px, not 7px. The reference pill was about 185px tall; these
+     are about 36px, so a 7px blur spread the band across most of the button
+     and left a faint smear with no travel visible at all. */
+  .btn-gold::before, .btn-copy::before {
+    content: "";
+    position: absolute;
+    z-index: 1;
+    top: -55%;
+    bottom: -55%;
+    left: -40%;
+    width: 34%;
+    transform: skewX(-17deg);
+    background: linear-gradient(90deg,
+      transparent 0%,
+      rgba(255,255,255,.02) 18%,
+      rgba(255,247,214,.20) 38%,
+      rgba(255,255,255,.58) 50%,
+      rgba(255,247,214,.18) 62%,
+      rgba(255,255,255,.02) 82%,
+      transparent 100%);
+    filter: blur(3px);
+    opacity: 0;
+    pointer-events: none;
+    animation: goldGleam 6.5s cubic-bezier(.45,0,.2,1) infinite;
+  }
+  /* A press should not be lit mid-stride, and a disabled control is not
+     catching any light at all. */
+  .btn-gold:active::before, .btn-copy:active::before,
+  .btn-gold:disabled::before, .btn-copy:disabled::before { opacity: 0; animation: none; }
+  /* The confirmation runs one deliberate sweep rather than waiting for the
+     cycle, so the copy lands with a flash of lustre instead of whenever. */
+  .btn-copy.done::before {
+    animation: goldGleam 1.15s cubic-bezier(.45,0,.2,1) 1;
+  }
+  @keyframes goldGleam {
+    0%, 35%   { left: -40%; opacity: 0; }
+    40%       { opacity: .62; }
+    61%       { left: 112%; opacity: .62; }
+    66%, 100% { left: 112%; opacity: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .btn-gold::before, .btn-copy::before { animation: none; opacity: 0; }
+    .btn-gold, .btn-copy { animation: none; }
+  }
+  /* Round two (R4): the header actions are a different species from the
+     field chips. Smaller, square-cornered, and grouped in one quiet tray, so
+     nothing up here reads as a stack of fields. */
+  .pillrow {
+    display: flex; gap: 3px; align-items: center; flex-wrap: wrap;
+    background: var(--lift-quiet); border: 1px solid var(--line-soft);
+    border-radius: 10px; padding: 3px 4px;
+  }
+  .action-pill {
+    flex: 0 0 auto; min-height: 22px; display: inline-flex; align-items: center; gap: 4px;
+    padding: 1px 8px; border-radius: 6px; border: 1px solid transparent;
+    color: var(--dim); font: inherit; font-size: 12px; font-weight: 600; white-space: nowrap; cursor: pointer;
+    background: transparent;
+  }
+  .action-pill:hover { color: var(--text); border-color: var(--gold-border); background: var(--lift); }
+  /* --gold-ink in light, --gold-text in dark: each is the readable gold on its
+     theme's glass; the other falls under the 4.5 floor (D1.1). */
+  .action-pill.primary { color: var(--gold-ink); border-color: var(--gold-border); font-weight: 650; }
+  :root[data-theme="dark"] .action-pill.primary { color: var(--gold-text); }
+  .comprow { display: grid; grid-template-columns: 1fr auto auto; gap: 8px; align-items: center;
+    padding: 7px 0; border-bottom: 1px solid var(--paper-line); }
+  .comprow:last-child { border-bottom: 0; }
+  .comprow .cname { font-size: 14px; font-weight: 600; }
+  .comprow .clegacy { font-size: 13px; color: var(--dim); }
+  .claimrow { display: grid; grid-template-columns: 1fr auto; gap: 4px 10px; align-items: baseline;
+    padding: 7px 0; border-bottom: 1px solid var(--paper-line); }
+  .claimrow:last-child { border-bottom: 0; }
+  .claimrow .cnote { grid-column: 1 / -1; font-size: 13px; color: var(--dim); }
+
+  /* ---------- history / lists ---------- */
+  .hrow { border: 1px solid var(--paper-line); border-radius: 14px; padding: 9px 12px; background: var(--paper-quiet);
+    display: flex; flex-direction: column; gap: 6px; user-select: text; }
+  .hrow .hidea { font-size: 14px; font-weight: 400; white-space: pre-wrap; overflow-wrap: anywhere; max-height: 118px; overflow-y: auto; }
+  .hrow .hmeta { font-size: 13px; color: var(--dim); }
+  .outc { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+  .oc { color: var(--text); font: inherit; font-size: 13px; padding: 4px 11px; border-radius: 999px;
+    border: 1px solid var(--line); background: var(--lift); cursor: pointer; }
+  .oc[aria-pressed="true"] { border-color: var(--gold-border); background: linear-gradient(180deg, rgba(241,181,69,.35), rgba(201,138,30,.25)); font-weight: 650; }
+  .histbar { display: flex; gap: 6px; align-items: center; flex: 0 0 auto; margin-bottom: 7px; flex-wrap: wrap; }
+  .histbar input[type="search"] { flex: 1; min-width: 130px; font-size: 13px; padding: 6px 10px; }
+  /* An empty reading surface is still a surface: it drew a blank white bar with
+     nothing in it. Restore showed two of them, under a heading for a result that
+     did not exist yet. Panels and status lines are for content, so with no
+     content there is nothing to show. Applies to redPreview, restOut and all
+     four statlines. */
+  .panel:empty, .statline:empty { display: none; }
+  /* And the label above a surface goes with it. */
+  div:has(> .fieldlabel):has(+ .panel:empty) { display: none; }
+
+  /* A textarea in a scrolling column must not be squeezed to a sliver by its
+     siblings. #idea has always carried an explicit height; the ones in Restore,
+     Redact and Verify did not, so they collapsed to a line and a half. */
+  .body textarea { flex: 0 0 auto; min-height: 92px; }
+
+  .statline { font-size: 13px; border-radius: 12px; padding: 8px 11px; border: 1px solid var(--paper-line);
+    background: var(--paper-quiet); user-select: text; }
+  .statline.ok { border-color: var(--green); color: var(--green); }
+  .statline.bad { border-color: var(--red); color: var(--red); }
+
+  /* ---------- settings ---------- */
+  .srow { display: flex; gap: 8px; align-items: center; flex: 0 0 auto; flex-wrap: wrap; }
+  .srow > label { font-size: 13px; color: var(--faint); min-width: 118px; }
+  .srow > select, .srow > input { flex: 1; min-width: 130px; }
+  .togglerow { display: flex; gap: 8px; align-items: flex-start; font-size: 14px; cursor: pointer; }
+  .togglerow input { accent-color: var(--gold); margin-top: 3px; }
+
+  /* ---------- creator sheet ---------- */
+  .creator-warning { border: 1px solid var(--red); border-radius: 14px; padding: 10px 12px;
+    background: var(--paper-strong); color: var(--red); font-size: 14px; line-height: 1.55; user-select: text; }
+
+  ::-webkit-scrollbar { width: 7px; }
+  ::-webkit-scrollbar-thumb { background: rgba(128,128,140,.45); border-radius: 4px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
+    .spot { animation: none; opacity: .85; }
+  }
+
+  /* Text that sits on the glass shell rather than on a panel.
+
+     The frost follows the TEXT, not the row: inline, cloned across wrapped
+     lines, and squared off rather than rounded, so a label never reads as a
+     control. Pills are for things you press; this is for things you read.
+
+     Only the shell stays glass. Transparency and the glass identity are
+     untouched — this is the "readable frosted text panel" rule the tokens
+     already describe, applied to the places that skipped it. */
+  /* Text that sits on the glass shell rather than on a panel.
+
+     No surface behind it: white ink with a hairline keyline, and nothing else.
+     Three earlier approaches were tried and dropped: a frosted plate (an opaque
+     tile behind every label), a shadow halo (read as a glow), and a keyline over
+     theme-coloured ink (dark ink washed out on a dark backdrop). White plus a
+     dark outline is legible over light and dark alike without a shadow.
+
+     This DOES override the ink, deliberately. --faint and --gold-text carry
+     meaning on a panel; on bare glass the only thing that matters is being
+     readable, so the four gold field labels that sit on glass go white too.
+
+     The ink is NOT set here. The existing tokens already flip with the theme and
+     they carry meaning: --faint for quiet text, --gold-text for a field label.
+     Overriding colour would flatten both. Only the halo is theme-aware, and it
+     is the inverse of the ink so the glyph survives a backdrop that matches it.
+
+     A caveat worth stating in the file rather than being rediscovered: CSS
+     cannot adapt this per pixel to what is actually behind the window. In a
+     transparent Electron window the desktop is composited by the OS, outside the
+     renderer, so backdrop-filter and mix-blend-mode see the page and never the
+     wallpaper. Stroke plus halo is the technique that needs no sampling, which
+     is the reason it is the one used. */
+  /* TEXT ON GLASS, BY RULE.
+
+     Tagging elements one at a time did not hold. The audit that found them could
+     only see what had already rendered, so anything a view builds when you open
+     it was invisible to the sweep: the Watch counter and its summary line were
+     still grey on glass after the sweep reported zero.
+
+     So the treatment is applied broadly to every text class inside a view, and
+     then UNDONE inside anything that is a reading surface. Broad application,
+     narrow undo. A new label added to a view is readable without anyone
+     remembering to tag it, and a label put inside a panel goes back to panel ink
+     without anyone remembering to untag it. */
+  .view .snote, .view .counter, .view .statline, .view .fieldlabel,
+  .view .title, .view .chipslabel, .view label {
+    color: rgba(255,255,255,.94);
+    -webkit-text-stroke: 0.18px var(--glass-stroke);
+    paint-order: stroke fill;
+    font-weight: 500;
+  }
+  /* On a surface, ordinary ink. Declared after, so the tie goes to the undo. */
+  .panel .snote, .panel .counter, .panel .statline, .panel .fieldlabel,
+  .panel .title, .panel label, .panel p, .panel h3,
+  .qcard .snote, .qcard .statline, .qcard label,
+  .hrow .snote, .hrow .statline,
+  .sheet .snote, .sheet label, .sheet .fieldlabel,
+  .disclosure .snote, .disclosure label, .disclosure .fieldlabel, .disclosure p,
+  .modecard .md, .modecard .mt {
+    color: var(--dim);
+    -webkit-text-stroke: 0;
+    font-weight: 400;
+  }
+  .panel .fieldlabel, .panel .title, .panel h3, .sheet .fieldlabel {
+    color: var(--gold-text); font-weight: 750;
+  }
+  .panel p, .modecard .mt { color: var(--text); }
+  .modecard .mt { font-weight: 650; }
+  .panel .statline, .hrow .statline { color: var(--dim); }
+
+  .glass-text.glass-text {
+    font-weight: 500;
+    color: rgba(255,255,255,.94);
+    -webkit-text-stroke: 0.18px var(--glass-stroke);
+    paint-order: stroke fill;
+  }
+
+  /* A statline is its own reading surface (paper-quiet fill, its own border),
+     so the broad text-on-glass rule above must not paint it white: white on
+     its light surface sampled at 1.11:1 on the Verify screen, the worst
+     finding of the whole BEFORE audit (D1.1). Declared last so it wins. */
+  .view .statline {
+    color: var(--dim);
+    -webkit-text-stroke: 0;
+    font-weight: 400;
+  }
+  .view .statline.ok { color: var(--green); }
+  .view .statline.bad { color: var(--red); }
+

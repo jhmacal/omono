@@ -1,0 +1,122 @@
+/* Browser framing for the unchanged desktop palette's glass, type and fields.
+
+   The page itself carries the O'Mono colour. On the desktop the window is
+   transparent and the colour lives in the shell; in a browser there is no
+   transparent window to look through, so the colour becomes the backdrop and
+   the app sits on it as glass. Owner ruling, 2026-09-19. The colour is kept at
+   the shell's own saturation, because the desktop's white-on-glass ink relies
+   on a saturated backdrop plus its dark keyline for contrast; a pale wash
+   underneath is what makes that ink disappear. */
+html {
+  min-height: 100%;
+  border-radius: 0;
+  background:
+    radial-gradient(105% 75% at 4% 96%, rgba(255,76,146,.95), transparent 62%),
+    radial-gradient(100% 78% at 88% 6%, rgba(0,184,255,1), transparent 64%),
+    radial-gradient(85% 65% at 104% 100%, rgba(122,86,255,.85), transparent 60%),
+    radial-gradient(90% 60% at 50% 46%, rgba(29,118,178,.42), transparent 72%),
+    linear-gradient(165deg, #9fd8f5, #7ec8ef 45%, #e5a8d2);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 24px;
+}
+html[data-theme="dark"] {
+  background:
+    radial-gradient(105% 75% at 4% 96%, rgba(255,76,146,.42), transparent 62%),
+    radial-gradient(100% 78% at 88% 6%, rgba(0,184,255,.46), transparent 64%),
+    radial-gradient(85% 65% at 104% 100%, rgba(122,86,255,.40), transparent 60%),
+    linear-gradient(165deg, #10121a, #141a26 45%, #1d1622);
+}
+body {
+  flex: 0 1 920px;
+  width: min(920px, 100%);
+  height: var(--browser-palette-height, 220px);
+  max-height: calc(100dvh - 48px);
+  margin: 0 auto;
+  min-width: 0;
+}
+body::before { position: absolute; }
+/* The desktop pins this pill to the window, and the window is the palette.
+   In a browser the window is the whole page, so it has to be pinned to the
+   palette instead or it lands in the corner of the tab. */
+.cornerpill { position: absolute; }
+#dragstrip, #resizeGrip, .browser-unavailable { display: none !important; }
+.view { min-width: 0; }
+.body, .crow, .compose-foot, .topbar, .srow { min-width: 0; }
+.body { overscroll-behavior: contain; }
+.dropdown { z-index: 90; max-width: calc(100vw - 32px); max-height: min(65dvh, 480px); overflow: auto; }
+#ownerNote, #legacyKeyNote, #legacyScrubRow { display: none !important; }
+#browserRefreshNote { overflow-wrap: anywhere; }
+
+@media (max-width: 640px) {
+  /* The phone gets the whole viewport (Design Rules: full viewport, same
+     glass identity, complete workflow). The palette does not measure itself
+     into a small window here; it fills, and the colour fills behind it. */
+  html { padding: 0; display: block; }
+  body {
+    width: 100%;
+    height: 100dvh;
+    max-height: none;
+    border-radius: 0;
+  }
+  /* The shell contour draws the window's rounded edge and its inner glow.
+     A phone has no window — the app is the screen — so there is no edge to
+     draw, and the layer is not merely redundant here: it acts as the backdrop
+     root for the small blurred pills, which Chromium then paints a second
+     time at the top of the screen. Measured 2026-09-19 against the built
+     bundle: with this layer the top strip carries 270 pills-coloured pixels,
+     without it, none. */
+  body::before { display: none; }
+  /* Reading surfaces stay glass you can see the colour through, but keep
+     enough milk to hold a paragraph at arm's length. */
+  .panel, .panel.quiet, .panel.strong {
+    background: linear-gradient(180deg, rgba(255,255,255,.62), rgba(255,255,255,.50));
+    border-color: rgba(255,255,255,.75);
+    -webkit-backdrop-filter: blur(22px) saturate(140%);
+    backdrop-filter: blur(22px) saturate(140%);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.85), 0 8px 26px rgba(20,40,80,.12);
+  }
+  :root[data-theme="dark"] .panel,
+  :root[data-theme="dark"] .panel.quiet,
+  :root[data-theme="dark"] .panel.strong {
+    background: linear-gradient(180deg, rgba(22,22,28,.72), rgba(22,22,28,.62));
+    border-color: rgba(255,255,255,.14);
+  }
+  /* Typing belongs at the thumb, with the colour above it. */
+  #viewCompose { justify-content: flex-end; }
+  /* This pill is pinned to the palette rather than laid out inside it, so the
+     screen's own padding does not lift it clear of the home bar. It needs the
+     same clearance itself. */
+  .cornerpill {
+    bottom: max(12px, calc(env(safe-area-inset-bottom) + 6px));
+    right: max(14px, calc(env(safe-area-inset-right) + 14px));
+  }
+  /* Clear of the phone's own furniture, with room to spare. The inset alone
+     ends exactly where the status bar ends, which puts the wordmark against
+     the clock and the top-right control against the battery; the owner's
+     2026-09-22 screenshot of the old page shows what that looks like. The
+     same at the bottom, so the thumb row is not sitting on the home bar. */
+  .view {
+    padding:
+      max(20px, calc(env(safe-area-inset-top) + 10px))
+      12px
+      max(12px, calc(env(safe-area-inset-bottom) + 6px));
+  }
+  .crow { flex-wrap: wrap; gap: 10px; }
+  .crow .brandmark { width: 70px; }
+  #ideaSlot { min-width: 0; flex: 1 1 calc(100% - 84px); }
+  .crow > #writeBtn, .crow > #cancelBtn { margin-left: auto; min-height: 40px; }
+  .compose-foot { flex-wrap: wrap; row-gap: 8px; }
+  #ctxState { flex-basis: 100%; overflow-wrap: anywhere; }
+  .topbar { flex-wrap: wrap; row-gap: 8px; }
+  .srow { flex-wrap: wrap; }
+  input, select, textarea { max-width: 100%; font-size: 16px; }
+  .srow input[type="password"], .srow input[type="text"] { min-width: 0; flex: 1 1 170px; }
+  .sheet { padding: 12px; }
+  .sheet > .panel { width: 100%; max-width: 100%; max-height: calc(100dvh - 32px); overflow: auto; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body { transition: none !important; }
+}

@@ -1,0 +1,1 @@
+"use strict";(function(){const workerURL=new URL("../sw.js",document.currentScript.src);if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register(workerURL).catch(function(){});});}})();
